@@ -10,6 +10,7 @@ import RegisterScreen from "./screens/register-screen";
 import LoginScreen from "./screens/login-screen";
 import ProfileScreen from "./screens/profile-screen";
 import NapsterScreen from "./napster";
+import SpotifyScreen from "./spotify";
 import NapsterSearchScreen from "./napster/napster-search";
 import NapsterAlbumDetailsScreen from "./napster/napster-album";
 import NapsterTrackDetailsScreen from "./napster/napster-track";
@@ -39,6 +40,7 @@ function App() {
                 path="/napster/search/:searchTerm"
                 element={<NapsterSearchScreen />}
               />
+              <Route path="/spotify" element={<SpotifyScreen />} />
               <Route path="/napster" element={<NapsterScreen />} />
               <Route path="/admin" element={<AdminScreen />} />
               <Route path="/profile" element={<ProfileScreen />} />
