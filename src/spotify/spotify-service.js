@@ -60,3 +60,87 @@ export const searchAlbums = async (query) => {
     });
     return response.data.albums;
 };
+
+export const getTrack = async (trackId) => {
+    const accessToken = await getAccessToken();
+    const response = await axios.get(`${SPOTIFY_API}/tracks/${trackId}`, {
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+        },
+    });
+    return response.data;
+};
+
+export const getArtist = async (artistId) => {
+    const accessToken = await getAccessToken();
+    const response = await axios.get(`${SPOTIFY_API}/artists/${artistId}`, {
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+        },
+    });
+    return response.data;
+};
+
+export const getAlbum = async (albumId) => {
+    const accessToken = await getAccessToken();
+    const response = await axios.get(`${SPOTIFY_API}/albums/${albumId}`, {
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+        },
+    });
+    return response.data;
+};
+export const getAlbumTracks = async (albumId) => {
+    const accessToken = await getAccessToken();
+    const response = await axios.get(`${SPOTIFY_API}/albums/${albumId}/tracks`, {
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+        },
+    });
+    return response.data.items;
+};
+export const getNewAlbumReleases = async () => {
+    const accessToken = await getAccessToken();
+    const response = await axios.get(`${SPOTIFY_API}/browse/new-releases`, {
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+        },
+    });
+    return response.data;
+};
+export const getArtistAlbums = async (artistId) => {
+    const accessToken = await getAccessToken();
+    const response = await axios.get(`${SPOTIFY_API}/artists/${artistId}/albums`, {
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+        },
+    });
+    return response.data;
+};
+export const getArtistTopTracks = async (artistId, country) => {
+    const accessToken = await getAccessToken();
+    const response = await axios.get(`${SPOTIFY_API}/artists/${artistId}/top-tracks`, {
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+        },
+    });
+    return response.data;
+};
+export const getArtistRelatedArtists = async (artistId) => {
+    const accessToken = await getAccessToken();
+    const response = await axios.get(`${SPOTIFY_API}/artists/${artistId}/related-artists`, {
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+        },
+    });
+    return response.data;
+};
+export const getTrackAudioFeatures = async (trackId) => {
+    const accessToken = await getAccessToken();
+    const response = await axios.get(`${SPOTIFY_API}/audio-features/${trackId}`, {
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+        },
+    });
+    return response.data;
+};

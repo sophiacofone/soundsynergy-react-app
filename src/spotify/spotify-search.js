@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { searchTracks, searchArtists, searchAlbums } from "./spotify-service";
-import {Link} from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 
 function SpotifySearchComponent() {
+    const { searchTerm } = useParams();
     const [search, setSearch] = useState("");
     const [searchType, setSearchType] = useState("track");
     const [displaySearchType, setDisplaySearchType] = useState("track");
@@ -60,22 +61,24 @@ function SpotifySearchComponent() {
                                 {displayResults.items &&
                                     displayResults.items.map((track) => (
                                         <td key={track.id}>
-                                            <div className="card">
-                                                <h6 className="card-header">{track.name}</h6>
-                                                <img
-                                                    src={(track.album.images?.length ?? 0) > 0 ? track.album.images[0].url : ""}
-                                                    className="card-img-top"
-                                                    style={{ width: "12rem", height: "12rem" }}
-                                                    alt={track.name}
-                                                />
-                                                <div className="card-body">
-                                                    Album: {track.album?.name ?? "N/A"}
+                                            <Link to={`/spotify/track/${track.id}`}>
+                                                <div className="card">
+                                                    <h6 className="card-header">{track.name}</h6>
+                                                    <img
+                                                        src={(track.album.images?.length ?? 0) > 0 ? track.album.images[0].url : ""}
+                                                        className="card-img-top"
+                                                        style={{ width: "12rem", height: "12rem" }}
+                                                        alt={track.name}
+                                                    />
+                                                    <div className="card-body">
+                                                        Album: {track.album?.name ?? "N/A"}
+                                                    </div>
+                                                    <ul className="list-group list-group-flush">
+                                                        <li className="list-group-item">link</li>
+                                                        <li className="list-group-item">link</li>
+                                                    </ul>
                                                 </div>
-                                                <ul className="list-group list-group-flush">
-                                                    <li className="list-group-item">link</li>
-                                                    <li className="list-group-item">link</li>
-                                                </ul>
-                                            </div>
+                                            </Link>
                                         </td>
                                     ))}
                             </tr>
@@ -94,22 +97,24 @@ function SpotifySearchComponent() {
                                 {displayResults.items &&
                                     displayResults.items.map((artist) => (
                                         <td key={artist.id}>
-                                            <div className="card">
-                                                <h6 className="card-header">{artist.name}</h6>
-                                                <img
-                                                    src={(artist.images?.length ?? 0) > 0 ? artist.images[0].url : ""}
-                                                    className="card-img-top"
-                                                    style={{ width: "12rem", height: "12rem" }}
-                                                    alt={artist.name}
-                                                />
-                                                <div className="card-body">
-                                                    Followers: {artist.followers?.total ?? "N/A"}
+                                            <Link to={`/spotify/artist/${artist.id}`}>
+                                                <div className="card">
+                                                    <h6 className="card-header">{artist.name}</h6>
+                                                    <img
+                                                        src={(artist.images?.length ?? 0) > 0 ? artist.images[0].url : ""}
+                                                        className="card-img-top"
+                                                        style={{ width: "12rem", height: "12rem" }}
+                                                        alt={artist.name}
+                                                    />
+                                                    <div className="card-body">
+                                                        Followers: {artist.followers?.total ?? "N/A"}
+                                                    </div>
+                                                    <ul className="list-group list-group-flush">
+                                                        <li className="list-group-item">link</li>
+                                                        <li className="list-group-item">link</li>
+                                                    </ul>
                                                 </div>
-                                                <ul className="list-group list-group-flush">
-                                                    <li className="list-group-item">link</li>
-                                                    <li className="list-group-item">link</li>
-                                                </ul>
-                                            </div>
+                                            </Link>
                                         </td>
                                     ))}
                             </tr>
@@ -128,22 +133,24 @@ function SpotifySearchComponent() {
                                 {displayResults.items &&
                                     displayResults.items.map((album) => (
                                         <td key={album.id}>
-                                            <div className="card">
-                                                <h6 className="card-header">{album.name}</h6>
-                                                <img
-                                                    src={(album.images?.length ?? 0) > 0 ? album.images[0].url : ""}
-                                                    className="card-img-top"
-                                                    style={{ width: "12rem", height: "12rem" }}
-                                                    alt={album.name}
-                                                />
-                                                <div className="card-body">
-                                                    Release date: {album.release_date ?? "N/A"}
+                                            <Link to={`/spotify/album/${album.id}`}>
+                                                <div className="card">
+                                                    <h6 className="card-header">{album.name}</h6>
+                                                    <img
+                                                        src={(album.images?.length ?? 0) > 0 ? album.images[0].url : ""}
+                                                        className="card-img-top"
+                                                        style={{ width: "12rem", height: "12rem" }}
+                                                        alt={album.name}
+                                                    />
+                                                    <div className="card-body">
+                                                        Release date: {album.release_date ?? "N/A"}
+                                                    </div>
+                                                    <ul className="list-group list-group-flush">
+                                                        <li className="list-group-item">link</li>
+                                                        <li className="list-group-item">link</li>
+                                                    </ul>
                                                 </div>
-                                                <ul className="list-group list-group-flush">
-                                                    <li className="list-group-item">link</li>
-                                                    <li className="list-group-item">link</li>
-                                                </ul>
-                                            </div>
+                                            </Link>
                                         </td>
                                     ))}
                             </tr>

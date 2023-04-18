@@ -9,12 +9,12 @@ import AdminScreen from "./screens/admin-screen";
 import RegisterScreen from "./screens/register-screen";
 import LoginScreen from "./screens/login-screen";
 import ProfileScreen from "./screens/profile-screen";
-import NapsterScreen from "./napster";
 import SpotifyScreen from "./spotify";
-import NapsterSearchScreen from "./napster/napster-search";
-import NapsterAlbumDetailsScreen from "./napster/napster-album";
-import NapsterTrackDetailsScreen from "./napster/napster-track";
+import SpotifyAlbumDetailsScreen from "./spotify/spotify-album-details";
+import SpotifyTrackDetailsScreen from "./spotify/spotify-track-details";
+import SpotifyArtistDetailsScreen from "./spotify/spotify-artist-details";
 import TuitList from "./tuiter/tuit-list";
+import SpotifySearchScreen from "./spotify/spotify-search";
 function App() {
   return (
     <Provider store={store}>
@@ -23,25 +23,24 @@ function App() {
           <BrowserRouter>
             <NavBar />
             <Routes>
-{/*              <Route
-                  path="/"
-                  element={<NapsterTrackDetailsScreen />}
-              />*/}
               <Route
-                path="/napster/track/:id"
-                element={<NapsterTrackDetailsScreen />}
+                path="/spotify/track/:id"
+                element={<SpotifyTrackDetailsScreen />}
               />
               <Route
-                path="/napster/album/:id"
-                element={<NapsterAlbumDetailsScreen />}
+                path="/spotify/album/:id"
+                element={<SpotifyAlbumDetailsScreen />}
               />
-              <Route path="/napster/search" element={<NapsterSearchScreen />} />
               <Route
-                path="/napster/search/:searchTerm"
-                element={<NapsterSearchScreen />}
+                  path="/spotify/artist/:id"
+                  element={<SpotifyArtistDetailsScreen />}
+              />
+              <Route path="/spotify/search" element={<SpotifySearchScreen />} />
+              <Route
+                path="/spotify/search/:searchTerm"
+                element={<SpotifySearchScreen />}
               />
               <Route path="/spotify" element={<SpotifyScreen />} />
-              <Route path="/napster" element={<NapsterScreen />} />
               <Route path="/admin" element={<AdminScreen />} />
               <Route path="/profile" element={<ProfileScreen />} />
               <Route path="/profile/:userId" element={<ProfileScreen />} />
