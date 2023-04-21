@@ -99,15 +99,7 @@ export const getAlbumTracks = async (albumId) => {
     });
     return response.data.items;
 };
-export const getNewAlbumReleases = async () => {
-    const accessToken = await getAccessToken();
-    const response = await axios.get(`${SPOTIFY_API}/browse/new-releases`, {
-        headers: {
-            Authorization: `Bearer ${accessToken}`,
-        },
-    });
-    return response.data;
-};
+
 export const getArtistAlbums = async (artistId) => {
     const accessToken = await getAccessToken();
     const response = await axios.get(`${SPOTIFY_API}/artists/${artistId}/albums`, {
@@ -115,22 +107,17 @@ export const getArtistAlbums = async (artistId) => {
             Authorization: `Bearer ${accessToken}`,
         },
     });
-    return response.data;
+    return response.data.items;
 };
 export const getArtistTopTracks = async (artistId, country) => {
     const accessToken = await getAccessToken();
     const response = await axios.get(`${SPOTIFY_API}/artists/${artistId}/top-tracks`, {
         headers: {
             Authorization: `Bearer ${accessToken}`,
+
         },
-    });
-    return response.data;
-};
-export const getArtistRelatedArtists = async (artistId) => {
-    const accessToken = await getAccessToken();
-    const response = await axios.get(`${SPOTIFY_API}/artists/${artistId}/related-artists`, {
-        headers: {
-            Authorization: `Bearer ${accessToken}`,
+        params: {
+            country: 'US',
         },
     });
     return response.data;
@@ -138,6 +125,15 @@ export const getArtistRelatedArtists = async (artistId) => {
 export const getTrackAudioFeatures = async (trackId) => {
     const accessToken = await getAccessToken();
     const response = await axios.get(`${SPOTIFY_API}/audio-features/${trackId}`, {
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+        },
+    });
+    return response.data;
+};
+export const getNewAlbumReleases = async () => {
+    const accessToken = await getAccessToken();
+    const response = await axios.get(`${SPOTIFY_API}/browse/new-releases`, {
         headers: {
             Authorization: `Bearer ${accessToken}`,
         },

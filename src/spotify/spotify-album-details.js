@@ -48,7 +48,7 @@ function SpotifyAlbumDetailsScreen() {
                     <strong> Album Type:</strong> {album.album_type}
                   </div>
                   <div>
-                    <strong> Album Type:</strong> {album.popularity}%
+                    <strong> Album Populatiry:</strong> {album.popularity}%
                   </div>
                 </div>
                 <div className="accordion" id="accordionExample">
@@ -64,7 +64,7 @@ function SpotifyAlbumDetailsScreen() {
                       <div className="accordion-body">
                         <ul className="list-group">
                           {tracks.map((track) => (
-                              <li className="list-group-item d-flex justify-content-between align-items-center">
+                              <li key={track.id} className="list-group-item d-flex justify-content-between align-items-center">
                                 <h6>
                                   <Link to={`/spotify/track/${track.id}`}>{track.name}</Link>
                                 </h6>
@@ -84,38 +84,22 @@ function SpotifyAlbumDetailsScreen() {
                     <div id="collapseTwo" className="accordion-collapse collapse" aria-labelledby="headingTwo"
                          data-bs-parent="#accordionExample">
                       <div className="accordion-body">
-                        <strong>This is the second item's accordion body.</strong> It is hidden by default, until the
-                        collapse plugin adds the appropriate classes that we use to style each element. These classes
-                        control the overall appearance, as well as the showing and hiding via CSS transitions. You can
-                        modify any of this with custom CSS or overriding our default variables. It's also worth noting
-                        that just about any HTML can go within the <code>.accordion-body</code>, though the transition
-                        does limit overflow.
-                      </div>
-                    </div>
-                  </div>
-                  <div className="accordion-item">
-                    <h2 className="accordion-header" id="headingThree">
-                      <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                              data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                        Genres
-                      </button>
-                    </h2>
-                    <div id="collapseThree" className="accordion-collapse collapse" aria-labelledby="headingThree"
-                         data-bs-parent="#accordionExample">
-                      <div className="accordion-body">
-                        <strong>This is the third item's accordion body.</strong> It is hidden by default, until the
-                        collapse plugin adds the appropriate classes that we use to style each element. These classes
-                        control the overall appearance, as well as the showing and hiding via CSS transitions. You can
-                        modify any of this with custom CSS or overriding our default variables. It's also worth noting
-                        that just about any HTML can go within the <code>.accordion-body</code>, though the transition
-                        does limit overflow.
+                        <ul className="list-group">
+                          {Array.isArray(album.artists) && album.artists.map((artist) => (
+                              <li key={artist.id} className="list-group-item d-flex justify-content-between align-items-center">
+                                <h6>
+                                  <Link to={`/spotify/artist/${artist.id}`}>{artist.name}</Link>
+                                </h6>
+                              </li>
+                          ))}
+                        </ul>
                       </div>
                     </div>
                   </div>
                 </div>
                 <ul className="list-group list-group-flush">
-                  <li className="list-group-item">Popularity: {album.popularity}%</li>
-                  <li className="list-group-item">Artists: link</li>
+                  <li className="list-group-item">link to save</li>
+                  <li className="list-group-item">friend analysis?</li>
                 </ul>
               </div>
             </div>
