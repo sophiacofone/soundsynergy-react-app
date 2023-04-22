@@ -4,7 +4,8 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 
 function SpotifySearchComponent() {
     const { searchTerm } = useParams();
-    const [search, setSearch] = useState("");
+    const [search, setSearch] = useState(searchTerm ?? "");
+    const [isSearchClicked, setIsSearchClicked] = useState(false);
     const [searchType, setSearchType] = useState("track");
     const [displaySearchType, setDisplaySearchType] = useState("track");
     const [displayResults, setDisplayResults] = useState([]);
@@ -26,10 +27,13 @@ function SpotifySearchComponent() {
         }
         setDisplayResults(response);
         setDisplaySearchType(searchType);
+        setIsSearchClicked(true);
+
     };
     return (
+        <div className='container'>
             <div>
-                <h1>Spotify Search</h1>
+                <h1>Spotify Search {search !== "" && ` - ${displaySearchType}`}</h1>
                 <div className="d-flex">
                     <input
                         type="text"
@@ -53,7 +57,7 @@ function SpotifySearchComponent() {
                 </div>
             {displaySearchType === "track" && (
                 <div>
-                    <h2>Tracks</h2>
+                    <h2>Search Results for: '{search !== "" && `${search}`}'</h2>
                     <div className="table-responsive">
                         <table className="table table-striped">
                             <tbody>
@@ -89,7 +93,7 @@ function SpotifySearchComponent() {
             )}
             {displaySearchType === "artist" && (
                 <div>
-                    <h2>Artists</h2>
+                    <h2>Search Results for: '{search !== "" && `${search}`}'</h2>
                     <div className="table-responsive">
                         <table className="table table-striped">
                             <tbody>
@@ -125,7 +129,7 @@ function SpotifySearchComponent() {
             )}
             {displaySearchType === "album" && (
                 <div>
-                    <h2>Albums</h2>
+                    <h2>Search Results for: '{search !== "" && `${search}`}'</h2>
                     <div className="table-responsive">
                         <table className="table table-striped">
                             <tbody>
@@ -156,6 +160,59 @@ function SpotifySearchComponent() {
                             </tr>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            )}
+            </div>
+            {!isSearchClicked && (
+                <div className="">
+                    <div className="row">
+                        <h4>Example results</h4>
+                        <div className="col-4">
+                            <div className="card">
+                                <h6 className="card-header">Raindrops</h6>
+                                <img
+                                    src={`${process.env.PUBLIC_URL}/images/rain_album_example.jpeg`}
+                                    className="card-img-top"
+                                    alt="Raindrops album example"
+                                />
+                                <div className="card-body">Album: Stormtide</div>
+                                <ul className="list-group list-group-flush">
+                                    <li className="list-group-item">link</li>
+                                    <li className="list-group-item">link</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div className="col-4">
+                            <div className="card">
+                                <h6 className="card-header">Jojabeats</h6>
+                                <img
+                                    src={`${process.env.PUBLIC_URL}/images/artist_example.jpeg`}
+                                    className="card-img-top"
+                                    alt="Raindrops album example"
+                                />
+                                <div className="card-body">Followers: 100k</div>
+                                <ul className="list-group list-group-flush">
+                                    <li className="list-group-item">link</li>
+                                    <li className="list-group-item">link</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div className="col-4">
+                            <div className="card">
+                                <h6 className="card-header">Stormtide</h6>
+                                <img
+                                    src={`${process.env.PUBLIC_URL}/images/rain_album_example.jpeg`}
+                                    className="card-img-top"
+                                    alt="Raindrops album example"
+                                />
+                                <div className="card-body">Release Date: Oct 2 2022</div>
+                                <ul className="list-group list-group-flush">
+                                    <li className="list-group-item">link</li>
+                                    <li className="list-group-item">link</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             )}
