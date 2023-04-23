@@ -31,9 +31,9 @@ function SpotifySearchComponent() {
 
     };
     return (
-        <div className='container'>
+        <div className='container m-2'>
             <div>
-                <h1>Spotify Search {search !== "" && ` - ${displaySearchType}`}</h1>
+                <h1>Spotify Media Search {search !== "" && ` - ${displaySearchType}`}</h1>
                 <div className="d-flex">
                     <input
                         type="text"
@@ -77,10 +77,6 @@ function SpotifySearchComponent() {
                                                     <div className="card-body">
                                                         Album: {track.album?.name ?? "N/A"}
                                                     </div>
-                                                    <ul className="list-group list-group-flush">
-                                                        <li className="list-group-item">link</li>
-                                                        <li className="list-group-item">link</li>
-                                                    </ul>
                                                 </div>
                                             </Link>
                                         </td>
@@ -113,10 +109,6 @@ function SpotifySearchComponent() {
                                                     <div className="card-body">
                                                         Followers: {artist.followers?.total ?? "N/A"}
                                                     </div>
-                                                    <ul className="list-group list-group-flush">
-                                                        <li className="list-group-item">link</li>
-                                                        <li className="list-group-item">link</li>
-                                                    </ul>
                                                 </div>
                                             </Link>
                                         </td>
@@ -149,10 +141,6 @@ function SpotifySearchComponent() {
                                                     <div className="card-body">
                                                         Release date: {album.release_date ?? "N/A"}
                                                     </div>
-                                                    <ul className="list-group list-group-flush">
-                                                        <li className="list-group-item">link</li>
-                                                        <li className="list-group-item">link</li>
-                                                    </ul>
                                                 </div>
                                             </Link>
                                         </td>
@@ -177,10 +165,6 @@ function SpotifySearchComponent() {
                                     alt="Raindrops album example"
                                 />
                                 <div className="card-body">Album: Stormtide</div>
-                                <ul className="list-group list-group-flush">
-                                    <li className="list-group-item">link</li>
-                                    <li className="list-group-item">link</li>
-                                </ul>
                             </div>
                         </div>
                         <div className="col-4">
@@ -192,10 +176,6 @@ function SpotifySearchComponent() {
                                     alt="Raindrops album example"
                                 />
                                 <div className="card-body">Followers: 100k</div>
-                                <ul className="list-group list-group-flush">
-                                    <li className="list-group-item">link</li>
-                                    <li className="list-group-item">link</li>
-                                </ul>
                             </div>
                         </div>
                         <div className="col-4">
@@ -206,11 +186,7 @@ function SpotifySearchComponent() {
                                     className="card-img-top"
                                     alt="Raindrops album example"
                                 />
-                                <div className="card-body">Release Date: Oct 2 2022</div>
-                                <ul className="list-group list-group-flush">
-                                    <li className="list-group-item">link</li>
-                                    <li className="list-group-item">link</li>
-                                </ul>
+                                <div className="card-body">Release Date: Oct 2, 2022</div>
                             </div>
                         </div>
                     </div>
