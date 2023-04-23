@@ -71,7 +71,7 @@ function ProfileScreen() {
     }, [profile]);
 
     return (
-        <div>
+        <div className="container mt-2">
             {profile && (
                 <div>
                     <div className="row">

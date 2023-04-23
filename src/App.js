@@ -22,23 +22,23 @@ function App() {
             <NavBar />
             <Routes>
               <Route
-                path="/spotify/track/:id"
+                path="/search/track/:id"
                 element={<SpotifyTrackDetailsScreen />}
               />
               <Route
-                path="/spotify/album/:id"
+                path="/search/album/:id"
                 element={<SpotifyAlbumDetailsScreen />}
               />
               <Route
-                  path="/spotify/artist/:id"
+                  path="/search/artist/:id"
                   element={<SpotifyArtistDetailsScreen />}
               />
-              <Route path="/spotify/search" element={<SpotifySearchScreen />} />
+              <Route path="/search/search" element={<SpotifySearchScreen />} />
               <Route
-                path="/spotify/search/:searchTerm"
+                path="/search/search/:searchTerm"
                 element={<SpotifySearchScreen />}
               />
-              <Route path="/spotify" element={<SpotifyScreen />} />
+              <Route path="/search" element={<SpotifyScreen />} />
               <Route path="/admin" element={<AdminScreen />} />
               <Route path="/profile" element={<ProfileScreen />} />
               <Route path="/profile/:userId" element={<ProfileScreen />} />

@@ -33,9 +33,9 @@ export default function NavBar() {
                         <li className="nav-item">
                             <div className="nav-link">
                                 <div className="nav-link">
-                                    <Link to="/spotify"  className={`nav-link ${active === 'spotify'?'active':''}`}>
+                                    <Link to="/search"  className={`nav-link ${active === 'search'?'active':''}`}>
                                         <i className="bi bi-search"></i>
-                                        <span className=""> Spotify</span>
+                                        <span className=""> Search</span>
                                     </Link>
                                 </div>
                             </div>
