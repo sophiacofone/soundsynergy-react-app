@@ -25,6 +25,10 @@ body {
     --bs-btn-border-color: #ef3030;
 }
 
+/*.modal {
+    z-index: 9999;
+}*/
+
 /*
 .accordion {
     --bs-accordion-active-color: #EA7B5D;
