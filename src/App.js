@@ -2,7 +2,6 @@ import store from "./redux/store";
 import { BrowserRouter } from "react-router-dom";
 import { Route, Routes } from "react-router";
 import { Provider } from "react-redux";
-import AddScreen from "./screens/add-screen";
 import NavBar from "./components/nav-bar";
 import CurrentUserContext from "./components/current-user-context";
 import AdminScreen from "./screens/admin-screen";
@@ -19,7 +18,6 @@ function App() {
   return (
     <Provider store={store}>
       <CurrentUserContext>
-        <div className="container-fluid">
           <BrowserRouter>
             <NavBar />
             <Routes>
@@ -47,10 +45,8 @@ function App() {
               <Route path="/login" element={<LoginScreen />} />
               <Route path="/register" element={<RegisterScreen />} />
               <Route path="/tuits" element={<TuitList />} />
-              <Route path="/add/:paramA/:paramB" element={<AddScreen />} />
             </Routes>
           </BrowserRouter>
-        </div>
       </CurrentUserContext>
     </Provider>
   );
