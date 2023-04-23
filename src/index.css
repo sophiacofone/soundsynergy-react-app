@@ -20,6 +20,11 @@ body {
     --bs-btn-border-color: #EA7B5D;
 }
 
+.btn-danger {
+    --bs-btn-bg: #ef3030;
+    --bs-btn-border-color: #ef3030;
+}
+
 /*
 .accordion {
     --bs-accordion-active-color: #EA7B5D;

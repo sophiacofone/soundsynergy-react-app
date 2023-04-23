@@ -64,139 +64,139 @@ function ProfileScreen() {
     loadScreen();
   }, [userId]);
   return (
-    <div>
-      <h1>
-        <button onClick={followUser} className="btn btn-primary float-end">
-          Follow
-        </button>
-        Profile {typeof userId !== undefined ? "me" : userId}
-      </h1>
-
-      {profile && (
-        <div>
-          <h2>Profile</h2>
-          <div>
-            <label>Username</label>
-            <input
-              type="text"
-              readOnly={true}
-              className="form-control"
-              value={profile.username}
-              onChange={(e) => {
-                setProfile({ ...profile, username: e.target.value });
-              }}
-            />
-          </div>
-          <div>
-            <label>Password</label>
-            <input
-              type="password"
-              readOnly={typeof userId !== undefined}
-              className="form-control"
-              value={profile.password}
-              onChange={(e) => {
-                setProfile({ ...profile, password: e.target.value });
-              }}
-            />
-          </div>
-          <div className="form-group">
-            <label>First Name</label>
-            <input
-              type="text"
-              className="form-control"
-              value={profile.firstName}
-              onChange={(e) => {
-                setProfile({ ...profile, firstName: e.target.value });
-              }}
-            />
-          </div>
-          <div className="form-group">
-            <label>Last Name</label>
-            <input
-              type="text"
-              className="form-control"
-              value={profile.lastName}
-              onChange={(e) => {
-                setProfile({ ...profile, lastName: e.target.value });
-              }}
-            />
-          </div>
-          <button onClick={updateProfile} className="btn btn-success">
-            Update
+      <div>
+        <h1>
+          <button onClick={followUser} className="btn btn-primary float-end">
+            Follow
           </button>
+          Profile {typeof userId !== undefined ? "me" : userId}
+        </h1>
 
-          <div>
-            <h3>{profile.username}</h3>
-            <h3>{profile._id}</h3>
-          </div>
-        </div>
-      )}
-
-      {follows && (
-        <div>
-          <h2>Followers</h2>
-          <ul className="list-group">
-            {follows.map((follow) => (
-              <li className="list-group-item">
-                <Link to={`/profile/${follow.follower._id}`}>
-                  <h3>{follow.follower.username}</h3>
-                  <h3>{follow.follower._id}</h3>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {following && (
-        <div>
-          <h2>Following</h2>
-          <ul className="list-group">
-            {following.map((follow) => (
-              <li className="list-group-item">
-                <Link to={`/profile/${follow.followed._id}`}>
-                  <h3>{follow.followed.username}</h3>
-                  <h3>{follow.followed._id}</h3>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-      <div>
-        {currentUser && (
-          <div>
-            <h2>
-              Welcome {currentUser.username} {currentUser._id}
-            </h2>
-          </div>
-        )}
-      </div>
-      <button
-        className="btn btn-danger"
-        onClick={() => {
-          dispatch(logoutThunk());
-          navigate("/login");
-        }}
-      >
-        Logout
-      </button>
-      <div>
-        <h2>Likes</h2>
-        <ul className="list-group">
-          {likes.map((like) => (
-            <li className="list-group-item">
-              <Link to={`/napster/album/${like.albumId}`}>
-                <h3>{like.albumId}</h3>
-                <img
-                  src={`https://api.napster.com/imageserver/v2/albums/${like.albumId}/images/300x300.jpg`}
+        {profile && (
+            <div>
+              <h2>Profile</h2>
+              <div>
+                <label>Username</label>
+                <input
+                    type="text"
+                    readOnly={true}
+                    className="form-control"
+                    value={profile.username}
+                    onChange={(e) => {
+                      setProfile({ ...profile, username: e.target.value });
+                    }}
                 />
-              </Link>
-            </li>
-          ))}
-        </ul>
+              </div>
+              <div>
+                <label>Password</label>
+                <input
+                    type="password"
+                    readOnly={typeof userId !== undefined}
+                    className="form-control"
+                    value={profile.password}
+                    onChange={(e) => {
+                      setProfile({ ...profile, password: e.target.value });
+                    }}
+                />
+              </div>
+              <div className="form-group">
+                <label>First Name</label>
+                <input
+                    type="text"
+                    className="form-control"
+                    value={profile.firstName}
+                    onChange={(e) => {
+                      setProfile({ ...profile, firstName: e.target.value });
+                    }}
+                />
+              </div>
+              <div className="form-group">
+                <label>Last Name</label>
+                <input
+                    type="text"
+                    className="form-control"
+                    value={profile.lastName}
+                    onChange={(e) => {
+                      setProfile({ ...profile, lastName: e.target.value });
+                    }}
+                />
+              </div>
+              <button onClick={updateProfile} className="btn btn-success">
+                Update
+              </button>
+
+              <div>
+                <h3>{profile.username}</h3>
+                <h3>{profile._id}</h3>
+              </div>
+            </div>
+        )}
+
+        {follows && (
+            <div>
+              <h2>Followers</h2>
+              <ul className="list-group">
+                {follows.map((follow) => (
+                    <li className="list-group-item">
+                      <Link to={`/profile/${follow.follower._id}`}>
+                        <h3>{follow.follower.username}</h3>
+                        <h3>{follow.follower._id}</h3>
+                      </Link>
+                    </li>
+                ))}
+              </ul>
+            </div>
+        )}
+
+        {following && (
+            <div>
+              <h2>Following</h2>
+              <ul className="list-group">
+                {following.map((follow) => (
+                    <li className="list-group-item">
+                      <Link to={`/profile/${follow.followed._id}`}>
+                        <h3>{follow.followed.username}</h3>
+                        <h3>{follow.followed._id}</h3>
+                      </Link>
+                    </li>
+                ))}
+              </ul>
+            </div>
+        )}
+        <div>
+          {currentUser && (
+              <div>
+                <h2>
+                  Welcome {currentUser.username} {currentUser._id}
+                </h2>
+              </div>
+          )}
+        </div>
+        <button
+            className="btn btn-danger"
+            onClick={() => {
+              dispatch(logoutThunk());
+              navigate("/login");
+            }}
+        >
+          Logout
+        </button>
+        <div>
+          <h2>Likes</h2>
+          <ul className="list-group">
+            {likes.map((like) => (
+                <li className="list-group-item">
+                  <Link to={`/spotify/album/${like.musicThingId}`}>
+                    <h3>{like.musicThingId}</h3>
+                    {/*<img
+                        src={`https://api.napster.com/imageserver/v2/albums/${like.albumId}/images/300x300.jpg`}
+                    />*/}
+                  </Link>
+                </li>
+            ))}
+          </ul>
+        </div>
       </div>
-    </div>
   );
 }
 

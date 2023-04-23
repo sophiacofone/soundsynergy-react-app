@@ -1,21 +1,25 @@
 import { Link, useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import { getAlbumTracks, getAlbum } from "./spotify-service";
 import { useSelector } from "react-redux";
-/*
-import { userLikesAlbum } from "./likes-service";
-*/
+
+import { getAlbumTracks, getAlbum } from "./spotify-service";
+import { userLikesAlbum, userUnlikesAlbum } from "./likes-service";
+
 function SpotifyAlbumDetailsScreen() {
-/*
   const { currentUser } = useSelector((state) => state.users);
-*/
+
   const { id } = useParams();
+
   const [tracks, setTracks] = useState([]);
   const [album, setAlbum] = useState({});
-  /*const likeAlbum = async () => {
+
+  const likeAlbum = async () => {
     const response = await userLikesAlbum(currentUser._id, id);
-    console.log(response);
-  };*/
+  };
+  const unlikeAlbum = async () => {
+    const response = await userUnlikesAlbum(currentUser._id, id);
+  };
+
   const fetchAlbum = async () => {
     const response = await getAlbum(id);
     setAlbum(response);
@@ -24,10 +28,12 @@ function SpotifyAlbumDetailsScreen() {
     const response = await getAlbumTracks(id);
     setTracks(response);
   };
+
   useEffect(() => {
     fetchTracks();
     fetchAlbum();
   }, []);
+
   return (
     <div>
       <div className="container m-3">
@@ -41,14 +47,26 @@ function SpotifyAlbumDetailsScreen() {
                     alt={album.name}
                 />
                 <div className="card-body">
-                  <div>
-                    <strong> Release date:</strong> {album.release_date ?? "N/A"}
-                  </div>
-                  <div>
-                    <strong> Album Type:</strong> {album.album_type}
-                  </div>
-                  <div>
-                    <strong> Album Populatiry:</strong> {album.popularity}%
+                  <div className="row">
+                    <div className="col-9">
+                      <div>
+                        <strong> Release date:</strong> {album.release_date ?? "N/A"}
+                      </div>
+                      <div>
+                        <strong> Album Type:</strong> {album.album_type}
+                      </div>
+                      <div>
+                        <strong> Album Populatiry:</strong> {album.popularity}%
+                      </div>
+                    </div>
+                    <div className="col-3">
+                      {currentUser && (
+                          <>
+                            <button onClick={likeAlbum} className="btn btn-sm btn-success">Like</button>
+                            <button onClick={unlikeAlbum} className="btn btn-sm btn-danger">Unlike</button>
+                          </>
+                        )}
+                    </div>
                   </div>
                 </div>
                 <div className="accordion" id="accordionExample">
@@ -98,7 +116,6 @@ function SpotifyAlbumDetailsScreen() {
                   </div>
                 </div>
                 <ul className="list-group list-group-flush">
-                  <li className="list-group-item">link to save</li>
                   <li className="list-group-item">friend analysis?</li>
                 </ul>
               </div>
