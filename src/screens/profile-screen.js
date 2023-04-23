@@ -6,7 +6,7 @@ import {
   updateUserThunk,
 } from "../services/users/users-thunks";
 import { useNavigate, useParams } from "react-router";
-import { findLikesByUserId } from "../napster/likes-service";
+import { findLikesByUserId } from "../spotify/likes-service";
 import { findUserById } from "../services/users/users-service";
 import {
   userFollowsUser,
