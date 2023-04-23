@@ -4,14 +4,17 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 
 function SpotifySearchComponent() {
     const { searchTerm } = useParams();
+
     const [search, setSearch] = useState(searchTerm ?? "");
     const [isSearchClicked, setIsSearchClicked] = useState(false);
     const [searchType, setSearchType] = useState("track");
     const [displaySearchType, setDisplaySearchType] = useState("track");
     const [displayResults, setDisplayResults] = useState([]);
+
     const handleSearchTypeChange = (event) => {
         setSearchType(event.target.value);
     };
+
     const handleSearch = async () => {
         let response;
         switch (searchType) {
@@ -65,7 +68,7 @@ function SpotifySearchComponent() {
                                 {displayResults.items &&
                                     displayResults.items.map((track) => (
                                         <td key={track.id}>
-                                            <Link to={`/spotify/track/${track.id}`}>
+                                            <Link to={`/search/track/${track.id}`}>
                                                 <div className="card">
                                                     <h6 className="card-header">{track.name}</h6>
                                                     <img
@@ -97,7 +100,7 @@ function SpotifySearchComponent() {
                                 {displayResults.items &&
                                     displayResults.items.map((artist) => (
                                         <td key={artist.id}>
-                                            <Link to={`/spotify/artist/${artist.id}`}>
+                                            <Link to={`/search/artist/${artist.id}`}>
                                                 <div className="card">
                                                     <h6 className="card-header">{artist.name}</h6>
                                                     <img
@@ -129,7 +132,7 @@ function SpotifySearchComponent() {
                                 {displayResults.items &&
                                     displayResults.items.map((album) => (
                                         <td key={album.id}>
-                                            <Link to={`/spotify/album/${album.id}`}>
+                                            <Link to={`/search/album/${album.id}`}>
                                                 <div className="card">
                                                     <h6 className="card-header">{album.name}</h6>
                                                     <img
@@ -139,7 +142,11 @@ function SpotifySearchComponent() {
                                                         alt={album.name}
                                                     />
                                                     <div className="card-body">
-                                                        Release date: {album.release_date ?? "N/A"}
+                                                        <strong> Release date: </strong>{
+                                                        album.release_date ?
+                                                            new Date(album.release_date).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) :
+                                                            "N/A"
+                                                    }
                                                     </div>
                                                 </div>
                                             </Link>

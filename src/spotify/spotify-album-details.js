@@ -12,12 +12,15 @@ function SpotifyAlbumDetailsScreen() {
 
   const [tracks, setTracks] = useState([]);
   const [album, setAlbum] = useState({});
+  const [isLiked, setIsLiked] = useState(false);
 
   const likeAlbum = async () => {
     const response = await userLikesAlbum(currentUser._id, id);
+    setIsLiked(true);
   };
   const unlikeAlbum = async () => {
     const response = await userUnlikesAlbum(currentUser._id, id);
+    setIsLiked(false);
   };
 
   const fetchAlbum = async () => {
@@ -50,7 +53,11 @@ function SpotifyAlbumDetailsScreen() {
                   <div className="row">
                     <div className="col-9">
                       <div>
-                        <strong> Release date:</strong> {album.release_date ?? "N/A"}
+                        <strong> Release date: </strong>{
+                        album.release_date ?
+                            new Date(album.release_date).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) :
+                            "N/A"
+                      }
                       </div>
                       <div>
                         <strong> Album Type:</strong> {album.album_type}
@@ -61,11 +68,12 @@ function SpotifyAlbumDetailsScreen() {
                     </div>
                     <div className="col-3">
                       {currentUser && (
-                          <>
-                            <button onClick={likeAlbum} className="btn btn-sm btn-success">Like</button>
-                            <button onClick={unlikeAlbum} className="btn btn-sm btn-danger">Unlike</button>
-                          </>
-                        )}
+                          isLiked ? (
+                              <button onClick={unlikeAlbum} className="btn btn-sm btn-danger">Dislike</button>
+                          ) : (
+                              <button onClick={likeAlbum} className="btn btn-sm btn-success">Like</button>
+                          )
+                      )}
                     </div>
                   </div>
                 </div>
@@ -84,7 +92,7 @@ function SpotifyAlbumDetailsScreen() {
                           {tracks.map((track) => (
                               <li key={track.id} className="list-group-item d-flex justify-content-between align-items-center">
                                 <h6>
-                                  <Link to={`/spotify/track/${track.id}`}>{track.name}</Link>
+                                  <Link to={`/search/track/${track.id}`}>{track.name}</Link>
                                 </h6>
                               </li>
                           ))}
@@ -106,7 +114,7 @@ function SpotifyAlbumDetailsScreen() {
                           {Array.isArray(album.artists) && album.artists.map((artist) => (
                               <li key={artist.id} className="list-group-item d-flex justify-content-between align-items-center">
                                 <h6>
-                                  <Link to={`/spotify/artist/${artist.id}`}>{artist.name}</Link>
+                                  <Link to={`/search/artist/${artist.id}`}>{artist.name}</Link>
                                 </h6>
                               </li>
                           ))}
