@@ -5,7 +5,7 @@ import {Link} from "react-router-dom";
 
 import {profileThunk, logoutThunk, updateUserThunk} from "../services/users/users-thunks";
 
-import {findUserById} from "../services/users/users-service";
+import {findUserById, findUserByUsername} from "../services/users/users-service";
 import {findAlbumNameId, findArtistNameId, findLikesByUserId,
     findTrackNameId, findAlbumImageId, findArtistImageId, findTrackImageId} from "../spotify/likes-service";
 import {userFollowsUser, findFollowsByFollowerId, findFollowsByFollowedId} from "../services/follows-service";
@@ -20,6 +20,7 @@ function ProfileScreen() {
     const [following, setFollowing] = useState([]);
     const [follows, setFollows] = useState([]);
     const [showModal, setShowModal] = useState(false);
+    const [searchInput, setSearchInput] = useState("");
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -79,6 +80,18 @@ function ProfileScreen() {
     const toggleModal = async () => {
         setShowModal(true);
     };
+    const handleSearchInputChange = (event) => {
+        setSearchInput(event.target.value);
+    };
+    const handleSearchSubmit = async (event) => {
+        event.preventDefault();
+        const foundUser = await findUserByUsername(searchInput);
+        if (foundUser) {
+            navigate(`/profile/${foundUser._id}`);
+        } else {
+            alert("User not found");
+        }
+    };
 
     useEffect(() => {
         loadScreen();
@@ -94,12 +107,28 @@ function ProfileScreen() {
 
     return (
         <div className="container mt-2">
+
+            <form onSubmit={handleSearchSubmit} className="d-flex mb-3">
+                <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Search for a user: username"
+                    value={searchInput}
+                    onChange={handleSearchInputChange}
+                />
+                <button type="submit" className="btn btn-primary ms-2">
+                    Search
+                </button>
+            </form>
+
             {profile && (
                 <div>
                     <div className="row">
                         <div className="col-6">
                             <div className="card border-secondary">
-                                <div className="card-header">{typeof userId !== undefined ? "My" : userId} Profile</div>
+                                <div className="card-header">
+                                    {userId === null ? "My Profile" : `${profile.firstname}'s Profile`}
+                                </div>
                                 <div className="card-body">
                                     <div className="row">
                                         <div className="col-7">
@@ -155,15 +184,27 @@ function ProfileScreen() {
                                                     </button>
                                                 </div>
                                             }
-                                            {userId !== undefined &&
-                                                <div>
-                                                    <button
-                                                        onClick={followUser}
-                                                        className="btn btn-sm btn-primary btn-block">
-                                                        Follow
-                                                    </button>
-                                                </div>
-                                            }
+                                            <div>
+                                                {userId !== undefined && (
+                                                    <>
+                                                        {currentUser ? (
+                                                            <button
+                                                                onClick={followUser}
+                                                                className="btn btn-sm btn-primary btn-block"
+                                                            >
+                                                                Follow
+                                                            </button>
+                                                        ) : (
+                                                            <button
+                                                                onClick={() => alert("Please log in to follow this user.")}
+                                                                className="btn btn-sm btn-primary btn-block"
+                                                            >
+                                                                Follow
+                                                            </button>
+                                                        )}
+                                                    </>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -332,97 +373,97 @@ function ProfileScreen() {
                             </div>
                         </div>
                     </div>
+                    <div className="mt-2">
+                        <h4>Favorite Analysis</h4>
+                    </div>
+                    <div className="mt-2">
+                        <h4>Favorite Albums</h4>
+                        <div className="table-responsive">
+                            {likes.filter((like) => like.type === "album").length > 0 && (
+                                <table className="table table-striped">
+                                    <tbody>
+                                    <tr>
+                                        {likes
+                                            .filter((like) => like.type === "album")
+                                            .map((like) => (
+                                                <td key={like.musicThingId}>
+                                                    <Link to={`/search/album/${like.musicThingId}`}>
+                                                        <div className="card">
+                                                            <h6 className="card-header">{like.name}</h6>
+                                                            <img
+                                                                src={like.image}
+                                                                className="card-img-top"
+                                                                style={{ width: "12rem", height: "12rem" }}
+                                                                alt={like.name}
+                                                            />
+                                                        </div>
+                                                    </Link>
+                                                </td>
+                                            ))}
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            )}
+                        </div>
+                        <h4>Favorite Tracks</h4>
+                        <div className="table-responsive">
+                            {likes.filter((like) => like.type === "track").length > 0 && (
+                                <table className="table table-striped">
+                                    <tbody>
+                                    <tr>
+                                        {likes
+                                            .filter((like) => like.type === "track")
+                                            .map((like) => (
+                                                <td key={like.musicThingId}>
+                                                    <Link to={`/search/track/${like.musicThingId}`}>
+                                                        <div className="card">
+                                                            <h6 className="card-header">{like.name}</h6>
+                                                            <img
+                                                                src={like.image}
+                                                                className="card-img-top"
+                                                                style={{ width: "12rem", height: "12rem" }}
+                                                                alt={like.name}
+                                                            />
+                                                        </div>
+                                                    </Link>
+                                                </td>
+                                            ))}
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            )}
+                        </div>
+                        <h4>Favorite Artists</h4>
+                        <div className="table-responsive">
+                            {likes.filter((like) => like.type === "artist").length > 0 && (
+                                <table className="table table-striped">
+                                    <tbody>
+                                    <tr>
+                                        {likes
+                                            .filter((like) => like.type === "artist")
+                                            .map((like) => (
+                                                <td key={like.musicThingId}>
+                                                    <Link to={`/search/artist/${like.musicThingId}`}>
+                                                        <div className="card">
+                                                            <h6 className="card-header">{like.name}</h6>
+                                                            <img
+                                                                src={like.image}
+                                                                className="card-img-top"
+                                                                style={{ width: "12rem", height: "12rem" }}
+                                                                alt={like.name}
+                                                            />
+                                                        </div>
+                                                    </Link>
+                                                </td>
+                                            ))}
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            )}
+                        </div>
+                    </div>
                 </div>
-            )}
-            <div className="mt-2">
-                <h4>Favorite Analysis</h4>
-            </div>
-            <div className="mt-2">
-                <h4>Favorite Albums</h4>
-                <div className="table-responsive">
-                    {likes.filter((like) => like.type === "album").length > 0 && (
-                        <table className="table table-striped">
-                            <tbody>
-                            <tr>
-                                {likes
-                                    .filter((like) => like.type === "album")
-                                    .map((like) => (
-                                        <td key={like.musicThingId}>
-                                            <Link to={`/search/album/${like.musicThingId}`}>
-                                                <div className="card">
-                                                    <h6 className="card-header">{like.name}</h6>
-                                                    <img
-                                                        src={like.image}
-                                                        className="card-img-top"
-                                                        style={{ width: "12rem", height: "12rem" }}
-                                                        alt={like.name}
-                                                    />
-                                                </div>
-                                            </Link>
-                                        </td>
-                                    ))}
-                            </tr>
-                            </tbody>
-                        </table>
-                    )}
-                </div>
-                <h4>Favorite Tracks</h4>
-                <div className="table-responsive">
-                    {likes.filter((like) => like.type === "track").length > 0 && (
-                        <table className="table table-striped">
-                            <tbody>
-                            <tr>
-                                {likes
-                                    .filter((like) => like.type === "track")
-                                    .map((like) => (
-                                        <td key={like.musicThingId}>
-                                            <Link to={`/search/track/${like.musicThingId}`}>
-                                                <div className="card">
-                                                    <h6 className="card-header">{like.name}</h6>
-                                                    <img
-                                                        src={like.image}
-                                                        className="card-img-top"
-                                                        style={{ width: "12rem", height: "12rem" }}
-                                                        alt={like.name}
-                                                    />
-                                                </div>
-                                            </Link>
-                                        </td>
-                                    ))}
-                            </tr>
-                            </tbody>
-                        </table>
-                    )}
-                </div>
-                <h4>Favorite Artists</h4>
-                <div className="table-responsive">
-                    {likes.filter((like) => like.type === "artist").length > 0 && (
-                        <table className="table table-striped">
-                            <tbody>
-                            <tr>
-                                {likes
-                                    .filter((like) => like.type === "artist")
-                                    .map((like) => (
-                                        <td key={like.musicThingId}>
-                                            <Link to={`/search/artist/${like.musicThingId}`}>
-                                                <div className="card">
-                                                    <h6 className="card-header">{like.name}</h6>
-                                                    <img
-                                                        src={like.image}
-                                                        className="card-img-top"
-                                                        style={{ width: "12rem", height: "12rem" }}
-                                                        alt={like.name}
-                                                    />
-                                                </div>
-                                            </Link>
-                                        </td>
-                                    ))}
-                            </tr>
-                            </tbody>
-                        </table>
-                    )}
-                </div>
-            </div>
+                )}
         </div>
     );
 }

@@ -15,6 +15,11 @@ export const findUserById = async (id) => {
   return response.data;
 };
 
+export const findUserByUsername = async (username) => {
+    const response = await axios.get(`${USERS_API_URL}/username/${username}`);
+    return response.data;
+}
+
 export const createUser = (user) => {
   return axios.post(USERS_API_URL, user);
 };
