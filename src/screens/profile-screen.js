@@ -104,7 +104,7 @@ function ProfileScreen() {
             fetchFollowers();
         }
     }, [profile]);
-    
+
     return (
         <div className="container mt-2">
 
