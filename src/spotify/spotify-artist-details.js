@@ -97,7 +97,7 @@ function SpotifyArtistDetailsScreen() {
                                             {Array.isArray(artistAlbum) && artistAlbum.map((album) => (
                                                 <li key={album.id} className="list-group-item d-flex justify-content-between align-items-center">
                                                     <h6>
-                                                        <Link to={`/spotify/album/${album.id}`}>{album.name}</Link>
+                                                        <Link to={`/search/album/${album.id}`}>{album.name}</Link>
                                                     </h6>
                                                 </li>
                                             ))}
@@ -120,7 +120,7 @@ function SpotifyArtistDetailsScreen() {
                                             {Array.isArray(artistTopTracks.tracks) && artistTopTracks.tracks.map((track) => (
                                                 <li key={track.id} className="list-group-item d-flex justify-content-between align-items-center">
                                                     <h6>
-                                                        <Link to={`/spotify/track/${track.id}`}>{track.name}</Link>
+                                                        <Link to={`/search/track/${track.id}`}>{track.name}</Link>
                                                     </h6>
                                                 </li>
                                             ))}

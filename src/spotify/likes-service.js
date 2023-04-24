@@ -2,6 +2,7 @@ import axios from "axios";
 
 const LIKES_API = "http://localhost:4000/api/likes";
 const USERS_API = "http://localhost:4000/api/users";
+const ALBUMS_API = "http://localhost:4000/api/albums";
 
 export const findLikesByUserId = async (userId) => {
     const response = await axios.get(`${USERS_API}/${userId}/likes`);
@@ -9,11 +10,22 @@ export const findLikesByUserId = async (userId) => {
 };
 
 export const userLikesAlbum = async (userId, albumId) => {
+    // Check if album exists in albums collection
+    const albumResponse = await axios.get(`${ALBUMS_API}/${albumId}`);
+    const album = albumResponse.data;
+
+    // If not, add it
+    if (!album) {
+        await axios.post(`${ALBUMS_API}`, { spotifyAlbumId: albumId });
+    }
+
+    // Add like to likes collection
     const response = await axios.post(
         `${USERS_API}/${userId}/likes/album/${albumId}`
     );
     return response.data;
 };
+
 
 export const userUnlikesAlbum = async (userId, albumId) => {
     const response = await axios.delete(

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { getAlbumTracks, getAlbum } from "./spotify-service";
-import { userLikesAlbum, userUnlikesAlbum } from "./likes-service";
+import { userLikesAlbum, userUnlikesAlbum, findLikesByUserId } from "./likes-service";
 
 function SpotifyAlbumDetailsScreen() {
   const { currentUser } = useSelector((state) => state.users);
@@ -23,6 +23,14 @@ function SpotifyAlbumDetailsScreen() {
     setIsLiked(false);
   };
 
+  const checkUserLikedAlbum = async () => {
+    if (currentUser) {
+      const likes = await findLikesByUserId(currentUser._id);
+      const albumLike = likes.find((like) => like.type === 'album' && like.musicThingId === id);
+      setIsLiked(Boolean(albumLike));
+    }
+  };
+
   const fetchAlbum = async () => {
     const response = await getAlbum(id);
     setAlbum(response);
@@ -35,7 +43,8 @@ function SpotifyAlbumDetailsScreen() {
   useEffect(() => {
     fetchTracks();
     fetchAlbum();
-  }, []);
+    checkUserLikedAlbum();
+  }, [currentUser, id]);
 
   return (
     <div>
