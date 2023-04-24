@@ -15,7 +15,7 @@ function SpotifyAlbumDetailsScreen() {
   const [isLiked, setIsLiked] = useState(false);
 
   const likeAlbum = async () => {
-    const response = await userLikesAlbum(currentUser._id, id);
+    const response = await userLikesAlbum(currentUser._id, id, album.name);
     setIsLiked(true);
   };
   const unlikeAlbum = async () => {

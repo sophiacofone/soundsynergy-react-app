@@ -2,17 +2,41 @@ import { Link, useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { getTrack } from "./spotify-service";
 import { useSelector } from "react-redux";
+import {findLikesByUserId, userLikesTrack, userUnlikesTrack} from "./likes-service";
 
 function SpotifyTrackDetailsScreen() {
-  const { id } = useParams();
+    const { currentUser } = useSelector((state) => state.users);
+    const { id } = useParams();
+
   const [track, setTrack] = useState({});
+  const [isLiked, setIsLiked] = useState(false);
+
+  const likeTrack = async () => {
+    const response = await userLikesTrack(currentUser._id, id, track.name);
+    setIsLiked(true);
+  };
+  const unlikeTrack = async () => {
+    const response = await userUnlikesTrack(currentUser._id, id);
+    setIsLiked(false);
+  };
+
+  const checkUserLikedTrack = async () => {
+    if (currentUser) {
+      const likes = await findLikesByUserId(currentUser._id);
+      const artistLike = likes.find((like) => like.type === 'track' && like.musicThingId === id);
+      setIsLiked(Boolean(artistLike));
+    }
+  };
+
   const fetchTrack = async () => {
     const response = await getTrack(id);
     setTrack(response);
   };
   useEffect(() => {
     fetchTrack();
-  }, []);
+    checkUserLikedTrack();
+  }, [currentUser, id]);
+
   return (
       <div>
         <div className="container m-3">
@@ -26,40 +50,47 @@ function SpotifyTrackDetailsScreen() {
                     alt={track.name}
                 />
                 <div className="card-body">
-                  <div>
-                    <strong> Release date:</strong>{" "}
-                    {track.album?.release_date ? track.album.release_date : "N/A"}
-                  </div>
-                  <div>
-                    <strong> Artist:</strong>{" "}
-                    <Link to={`/spotify/artist/${track.artists && track.artists.length ? track.artists[0].id : ''}`}>
-                      {track.artists && track.artists.length ? track.artists[0].name : 'N/A'}
-                    </Link>
-                  </div>
-                  <div>
-                    <strong> Album Name:</strong>{" "}
-                    <Link to={`/spotify/album/${track.album?.id}`}>
-                      {track.album?.name ? track.album?.name : "N/A"}
-                    </Link>
-                  </div>
-                  <div>
-                    <strong> Album Type:</strong>{" "}
-                    {track.album?.album_type ? track.album?.album_type : "N/A"}
-                  </div>
-                  <div>
-                    <strong> Track Popularity:</strong>{" "}
-                    {track.popularity ? track.popularity + "%" : "N/A"}
+                  <div className="row">
+                    <div className="col-9">
+                      <div>
+                        <strong> Artist:</strong>{" "}
+                        <Link to={`/search/artist/${track.artists && track.artists.length ? track.artists[0].id : ''}`}>
+                          {track.artists && track.artists.length ? track.artists[0].name : 'N/A'}
+                        </Link>
+                      </div>
+                      <div>
+                        <strong> Album Name:</strong>{" "}
+                        <Link to={`/search/album/${track.album?.id}`}>
+                          {track.album?.name ? track.album?.name : "N/A"}
+                        </Link>
+                      </div>
+                      <div>
+                        <strong> Album Type:</strong>{" "}
+                        {track.album?.album_type ? track.album?.album_type : "N/A"}
+                      </div>
+                      <div>
+                        <strong> Track Popularity:</strong>{" "}
+                        {track.popularity ? track.popularity + "%" : "N/A"}
+                      </div>
+                    </div>
+                    <div className="col-3">
+                      {currentUser && (
+                          isLiked ? (
+                              <button onClick={unlikeTrack} className="btn btn-sm btn-danger">Dislike</button>
+                          ) : (
+                              <button onClick={likeTrack} className="btn btn-sm btn-success">Like</button>
+                          )
+                      )}
+                    </div>
                   </div>
                 </div>
                 <ul className="list-group list-group-flush">
-                  <li className="list-group-item">link to save</li>
                   <li className="list-group-item">friend analysis?</li>
                 </ul>
               </div>
             </div>
           </div>
         </div>
-        <h1>{track.name}</h1>
       </div>
   );
 }

@@ -109,8 +109,11 @@ function SpotifySearchComponent() {
                                                         style={{ width: "12rem", height: "12rem" }}
                                                         alt={artist.name}
                                                     />
-                                                    <div className="card-body">
-                                                        Followers: {artist.followers?.total ?? "N/A"}
+                                                    <div>
+                                                        <strong>Artist Followers:</strong>{" "}
+                                                        {artist.followers?.total
+                                                            ? artist.followers.total.toLocaleString()
+                                                            : "N/A"}
                                                     </div>
                                                 </div>
                                             </Link>
@@ -182,7 +185,7 @@ function SpotifySearchComponent() {
                                     className="card-img-top"
                                     alt="Raindrops album example"
                                 />
-                                <div className="card-body">Followers: 100k</div>
+                                <div className="card-body">Followers: 1,000</div>
                             </div>
                         </div>
                         <div className="col-4">

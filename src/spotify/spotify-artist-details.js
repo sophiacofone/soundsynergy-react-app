@@ -2,14 +2,36 @@ import {Link, useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import {getArtist, getArtistAlbums, getArtistTopTracks} from "./spotify-service";
 import {useSelector} from "react-redux";
+import {findLikesByUserId, userLikesArtist, userUnlikesArtist} from "./likes-service";
 
 
 function SpotifyArtistDetailsScreen() {
+    const { currentUser } = useSelector((state) => state.users);
 
-    const {id} = useParams();
+    const { id } = useParams();
+
     const [artist, setArtist] = useState({});
     const [artistAlbum, setArtistAlbum] = useState({});
     const [artistTopTracks, setArtistTopTracks] = useState({});
+    const [isLiked, setIsLiked] = useState(false);
+
+
+    const likeArtist = async () => {
+        const response = await userLikesArtist(currentUser._id, id, artist.name);
+        setIsLiked(true);
+    };
+    const unlikeArtist = async () => {
+        const response = await userUnlikesArtist(currentUser._id, id);
+        setIsLiked(false);
+    };
+
+    const checkUserLikedArtist = async () => {
+        if (currentUser) {
+            const likes = await findLikesByUserId(currentUser._id);
+            const artistLike = likes.find((like) => like.type === 'artist' && like.musicThingId === id);
+            setIsLiked(Boolean(artistLike));
+        }
+    };
 
     const fetchArtist = async () => {
         const response = await getArtist(id);
@@ -28,7 +50,8 @@ function SpotifyArtistDetailsScreen() {
         fetchArtist();
         fetchArtistAlbums();
         fetchArtistTopTracks();
-    }, []);
+        checkUserLikedArtist();
+    }, [currentUser, id]);
 
     const genre_list = artist.genres
 
@@ -45,11 +68,27 @@ function SpotifyArtistDetailsScreen() {
                                 alt={artist.name}
                             />
                             <div className="card-body">
+                                <div className="row">
+                                <div className="col-9">
                                 <div>
-                                    <strong> Artist Followers:</strong> {artist.followers?.total ?? "N/A"}
+                                    <strong>Artist Followers:</strong>{" "}
+                                    {artist.followers?.total
+                                        ? artist.followers.total.toLocaleString()
+                                        : "N/A"}
                                 </div>
                                 <div>
                                     <strong> Artist Populatiry:</strong> {artist.popularity}%
+                                </div>
+                                </div>
+                                <div className="col-3">
+                                    {currentUser && (
+                                        isLiked ? (
+                                            <button onClick={unlikeArtist} className="btn btn-sm btn-danger">Dislike</button>
+                                        ) : (
+                                            <button onClick={likeArtist} className="btn btn-sm btn-success">Like</button>
+                                        )
+                                    )}
+                                </div>
                                 </div>
                             </div>
                             <div className="accordion" id="accordionExample">
@@ -129,7 +168,6 @@ function SpotifyArtistDetailsScreen() {
                                 </div>
                             </div>
                             <ul className="list-group list-group-flush">
-                                <li className="list-group-item">link to save</li>
                                 <li className="list-group-item">friend analysis?</li>
                             </ul>
                         </div>
