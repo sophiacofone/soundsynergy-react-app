@@ -104,7 +104,7 @@ function ProfileScreen() {
             fetchFollowers();
         }
     }, [profile]);
-
+    
     return (
         <div className="container mt-2">
 
@@ -127,7 +127,7 @@ function ProfileScreen() {
                         <div className="col-6">
                             <div className="card border-secondary">
                                 <div className="card-header">
-                                    {userId === null ? "My Profile" : `${profile.firstname}'s Profile`}
+                                    {userId === undefined ? "My Profile" : `${profile.firstname}'s Profile`}
                                 </div>
                                 <div className="card-body">
                                     <div className="row">
@@ -260,6 +260,17 @@ function ProfileScreen() {
                                                 />
                                             </div>
                                             <div className="form-group">
+                                                <label>Bio</label>
+                                                <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    value={profile.bio}
+                                                    onChange={(e) => {
+                                                        setProfile({...profile, bio: e.target.value});
+                                                    }}
+                                                />
+                                            </div>
+                                            <div className="form-group">
                                                 <label>City</label>
                                                 <input
                                                     type="text"
@@ -335,9 +346,9 @@ function ProfileScreen() {
                         <div className="col-2">
                             <div className="">
                                 <div className="card border-primary">
-                                    <div className="card-header">Following List</div>
+                                    <div className="card-header">Following</div>
                                     {following && (
-                                        <ul className="list-group list-group-flush">
+                                        <ul className="list-group list-group-flush overflow-auto shadow" style={{maxHeight: "235px"}}>
                                             {following.map((follow) => (
                                                 <div key={follow.followed._id}>
                                                     <li className="list-group-item">
@@ -355,14 +366,14 @@ function ProfileScreen() {
                         <div className="col-2">
                             <div className="">
                                 <div className="card border-primary">
-                                    <div className="card-header">Followers List</div>
+                                    <div className="card-header">Followers</div>
                                     {follows && (
-                                        <ul className="list-group">
+                                        <ul className="list-group list-group-flush overflow-auto shadow" style={{maxHeight: "235px"}}>
                                             {follows.map((follow) => (
                                                 <div key={follow.follower._id}>
                                                     <li className="list-group-item">
                                                         <Link to={`/profile/${follow.follower._id}`}>
-                                                            <h6>{follow.follower.username}</h6>
+                                                            <p>{follow.follower.username}</p>
                                                         </Link>
                                                     </li>
                                                 </div>
