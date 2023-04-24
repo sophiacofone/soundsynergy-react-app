@@ -14,6 +14,8 @@ import SpotifyTrackDetailsScreen from "./spotify/spotify-track-details";
 import SpotifyArtistDetailsScreen from "./spotify/spotify-artist-details";
 import TuitList from "./tuiter/tuit-list";
 import SpotifySearchScreen from "./spotify/spotify-search";
+import HomeScreen from "./screens/home-screen";
+import AnalysisScreen from "./screens/analysis-screen";
 function App() {
   return (
     <Provider store={store}>
@@ -44,6 +46,9 @@ function App() {
               <Route path="/profile/:userId" element={<ProfileScreen />} />
               <Route path="/login" element={<LoginScreen />} />
               <Route path="/register" element={<RegisterScreen />} />
+              <Route path="/" element={<HomeScreen />} />
+              <Route path="/analysis" element={<AnalysisScreen />} />
+              <Route path="/home" element={<HomeScreen />} />
               <Route path="/tuits" element={<TuitList />} />
             </Routes>
           </BrowserRouter>
