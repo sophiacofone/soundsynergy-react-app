@@ -11,14 +11,44 @@ export const findLikesByUserId = async (userId) => {
     return response.data;
 };
 
-export const userLikesAlbum = async (userId, albumId, name) => {
+export const findAlbumNameId = async (albumId) => {
+    const response = await axios.get(`${ALBUMS_API}/${albumId}/name`);
+    return response.data;
+};
+
+export const findArtistNameId = async (artistId) => {
+    const response = await axios.get(`${ARTIST_API}/${artistId}/name`);
+    return response.data;
+};
+
+export const findTrackNameId = async (trackId) => {
+    const response = await axios.get(`${TRACKS_API}/${trackId}/name`);
+    return response.data;
+};
+
+export const findAlbumImageId = async (albumId) => {
+    const response = await axios.get(`${ALBUMS_API}/${albumId}/image`);
+    return response.data;
+};
+
+export const findArtistImageId = async (artistId) => {
+    const response = await axios.get(`${ARTIST_API}/${artistId}/image`);
+    return response.data;
+};
+
+export const findTrackImageId = async (trackId) => {
+    const response = await axios.get(`${TRACKS_API}/${trackId}/image`);
+    return response.data;
+};
+
+export const userLikesAlbum = async (userId, albumId, name, image) => {
     // Check if album exists in albums collection
     const albumResponse = await axios.get(`${ALBUMS_API}/${albumId}`);
     const album = albumResponse.data;
 
     // If not, add it
     if (!album) {
-        await axios.post(`${ALBUMS_API}`, { spotifyAlbumId: albumId , name: name});
+        await axios.post(`${ALBUMS_API}`, { spotifyAlbumId: albumId , name: name, image: image});
     }
 
     // Add like to likes collection
@@ -35,13 +65,13 @@ export const userUnlikesAlbum = async (userId, albumId) => {
     return response.data;
 };
 
-export const userLikesArtist = async (userId, artistId, name) => {
+export const userLikesArtist = async (userId, artistId, name, image) => {
     // Check if artist exists in artist collection
     const artistResponse = await axios.get(`${ARTIST_API}/${artistId}`);
     const artist = artistResponse.data;
     // If not, add it
     if (!artist) {
-        await axios.post(`${ARTIST_API}`, { spotifyArtistId: artistId, name: name});
+        await axios.post(`${ARTIST_API}`, { spotifyArtistId: artistId, name: name, image: image});
     }
     // Add like to likes collection
     const response = await axios.post(
@@ -57,13 +87,13 @@ export const userUnlikesArtist = async (userId, artistId) => {
     return response.data;
 };
 
-export const userLikesTrack = async (userId, trackId, name) => {
+export const userLikesTrack = async (userId, trackId, name, image) => {
     // Check if track exists in track collection
     const trackResponse = await axios.get(`${TRACKS_API}/${trackId}`);
     const track = trackResponse.data;
     // If not, add it
     if (!track) {
-        await axios.post(`${TRACKS_API}`, { spotifyTrackId: trackId, name: name });
+        await axios.post(`${TRACKS_API}`, { spotifyTrackId: trackId, name: name, image:image});
     }
     // Add like to likes collection
     const response = await axios.post(

@@ -6,7 +6,8 @@ import {Link} from "react-router-dom";
 import {profileThunk, logoutThunk, updateUserThunk} from "../services/users/users-thunks";
 
 import {findUserById} from "../services/users/users-service";
-import {findLikesByUserId} from "../spotify/likes-service";
+import {findAlbumNameId, findArtistNameId, findLikesByUserId,
+    findTrackNameId, findAlbumImageId, findArtistImageId, findTrackImageId} from "../spotify/likes-service";
 import {userFollowsUser, findFollowsByFollowerId, findFollowsByFollowedId} from "../services/follows-service";
 
 
@@ -33,7 +34,28 @@ function ProfileScreen() {
     };
     const fetchLikes = async () => {
         const likes = await findLikesByUserId(profile._id);
-        setLikes(likes);
+        const likesData = await Promise.all(
+            likes.map(async (like) => {
+                let name;
+                let image;
+                if (like.type === "album") {
+                    name = await findAlbumNameId(like.musicThingId)
+                    image = await findAlbumImageId(like.musicThingId);
+                } else if (like.type === "artist") {
+                    name = await findArtistNameId(like.musicThingId)
+                    image = await findArtistImageId(like.musicThingId);
+                } else if (like.type === "track") {
+                    name = await findTrackNameId(like.musicThingId)
+                    image = await findTrackImageId(like.musicThingId);
+                }
+                return {
+                    ...like,
+                    name,
+                    image,
+                };
+            })
+        );
+        setLikes(likesData);
     };
     const fetchProfile = async () => {
         if (userId) {
@@ -312,23 +334,93 @@ function ProfileScreen() {
                     </div>
                 </div>
             )}
-            <div>
-                <h2>Likes</h2>
+            <div className="mt-2">
+                <h4>Favorite Analysis</h4>
+            </div>
+            <div className="mt-2">
+                <h4>Favorite Albums</h4>
                 <div className="table-responsive">
-                    <table className="table table-striped">
-                        <tbody>
-                        <tr>
-                            {likes.map((like) => (
-                                <td key={like.musicThingId}>
-                                    <Link to={`/spotify/album/${like.musicThingId}`}>
-                                        <h3>{like.musicThingId}</h3>
-                                    </Link>
-                                </td>
-                            ))
-                            }
-                        </tr>
-                        </tbody>
-                    </table>
+                    {likes.filter((like) => like.type === "album").length > 0 && (
+                        <table className="table table-striped">
+                            <tbody>
+                            <tr>
+                                {likes
+                                    .filter((like) => like.type === "album")
+                                    .map((like) => (
+                                        <td key={like.musicThingId}>
+                                            <Link to={`/search/album/${like.musicThingId}`}>
+                                                <div className="card">
+                                                    <h6 className="card-header">{like.name}</h6>
+                                                    <img
+                                                        src={like.image}
+                                                        className="card-img-top"
+                                                        style={{ width: "12rem", height: "12rem" }}
+                                                        alt={like.name}
+                                                    />
+                                                </div>
+                                            </Link>
+                                        </td>
+                                    ))}
+                            </tr>
+                            </tbody>
+                        </table>
+                    )}
+                </div>
+                <h4>Favorite Tracks</h4>
+                <div className="table-responsive">
+                    {likes.filter((like) => like.type === "track").length > 0 && (
+                        <table className="table table-striped">
+                            <tbody>
+                            <tr>
+                                {likes
+                                    .filter((like) => like.type === "track")
+                                    .map((like) => (
+                                        <td key={like.musicThingId}>
+                                            <Link to={`/search/track/${like.musicThingId}`}>
+                                                <div className="card">
+                                                    <h6 className="card-header">{like.name}</h6>
+                                                    <img
+                                                        src={like.image}
+                                                        className="card-img-top"
+                                                        style={{ width: "12rem", height: "12rem" }}
+                                                        alt={like.name}
+                                                    />
+                                                </div>
+                                            </Link>
+                                        </td>
+                                    ))}
+                            </tr>
+                            </tbody>
+                        </table>
+                    )}
+                </div>
+                <h4>Favorite Artists</h4>
+                <div className="table-responsive">
+                    {likes.filter((like) => like.type === "artist").length > 0 && (
+                        <table className="table table-striped">
+                            <tbody>
+                            <tr>
+                                {likes
+                                    .filter((like) => like.type === "artist")
+                                    .map((like) => (
+                                        <td key={like.musicThingId}>
+                                            <Link to={`/search/artist/${like.musicThingId}`}>
+                                                <div className="card">
+                                                    <h6 className="card-header">{like.name}</h6>
+                                                    <img
+                                                        src={like.image}
+                                                        className="card-img-top"
+                                                        style={{ width: "12rem", height: "12rem" }}
+                                                        alt={like.name}
+                                                    />
+                                                </div>
+                                            </Link>
+                                        </td>
+                                    ))}
+                            </tr>
+                            </tbody>
+                        </table>
+                    )}
                 </div>
             </div>
         </div>

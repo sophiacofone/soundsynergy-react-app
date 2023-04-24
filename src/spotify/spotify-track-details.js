@@ -12,7 +12,7 @@ function SpotifyTrackDetailsScreen() {
   const [isLiked, setIsLiked] = useState(false);
 
   const likeTrack = async () => {
-    const response = await userLikesTrack(currentUser._id, id, track.name);
+    const response = await userLikesTrack(currentUser._id, id, track.name, track.album.images[0].url);
     setIsLiked(true);
   };
   const unlikeTrack = async () => {

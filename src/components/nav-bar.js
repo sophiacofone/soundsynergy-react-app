@@ -40,7 +40,7 @@ export default function NavBar() {
                                 </div>
                             </div>
                         </li>
-                        {currentUser &&  <li className="nav-item">
+                        <li className="nav-item">
                             <div className="nav-link">
                                 <div className="nav-link">
                                     <Link to="/profile"  className={`nav-link ${active === 'profile'?'active':''}`}>
@@ -49,11 +49,11 @@ export default function NavBar() {
                                     </Link>
                                 </div>
                             </div>
-                        </li>}
+                        </li>
                         {!currentUser && (<li className="nav-item">
                             <div className="nav-link">
                                 <div className="nav-link">
-                                    <Link to="/register"  className={`nav-link ${active === 'login'?'active':''}`}>
+                                    <Link to="/login"  className={`nav-link ${active === 'login'?'active':''}`}>
                                         <i className="bi bi-person"></i>
                                         <span className=""> Login</span>
                                     </Link>

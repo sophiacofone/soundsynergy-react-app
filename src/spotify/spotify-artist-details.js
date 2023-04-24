@@ -17,7 +17,7 @@ function SpotifyArtistDetailsScreen() {
 
 
     const likeArtist = async () => {
-        const response = await userLikesArtist(currentUser._id, id, artist.name);
+        const response = await userLikesArtist(currentUser._id, id, artist.name, artist.images[0].url);
         setIsLiked(true);
     };
     const unlikeArtist = async () => {
