@@ -32,6 +32,8 @@ function ProfileScreen() {
     const [searchInput, setSearchInput] = useState("");
     const [friendStatus, setFriendStatus] = useState(false);
     const [friendRequests, setFriendRequests] = useState([]);
+    const [friends, setFriends] = useState([]);
+    const [username, setUsername] = useState("");
 
 
     const dispatch = useDispatch();
@@ -129,17 +131,27 @@ function ProfileScreen() {
     };
 
     const fetchFriendStatus = async () => {
-        const friends = await findFriendsByUser(currentUser);
+        const friends = await findFriendsByUser(currentUser._id);
         const friendRecord = friends.find(
             (friend) =>
-                (friend.user1 === currentUser && friend.user2 === profile) ||
-                (friend.user1 === profile && friend.user2 === currentUser));
+                (friend.user1 === currentUser._id && friend.user2 === profile._id) ||
+                (friend.user1 === profile._id && friend.user2 === currentUser._id)
+        );
         if (friendRecord) {
             setFriendStatus(friendRecord.status);
         }
     };
 
-
+    const fetchFriends = async () => {
+        const friendObjects = await findFriendsByUser(profile._id);
+        const friendsList = await Promise.all(
+            friendObjects.map(async (friend) => {
+                const friendData = await findUserById(friend.user2);
+                return friendData;
+            })
+        );
+        setFriends(friendsList);
+    };
 
     const fetchFriendRequests = async () => {
         // Replace this with the function to fetch friend requests from your backend
@@ -157,9 +169,11 @@ function ProfileScreen() {
             fetchFollowing();
             fetchFollowers();
             fetchFriendRequests();
+            fetchFriends();
+            fetchFriendStatus(); // Add this line
         }
     }, [profile]);
-
+    console.log(friendStatus)
     return (
         <div className="container mt-2">
 
@@ -254,7 +268,7 @@ function ProfileScreen() {
                                                                 onClick={() => alert("Please log in to friend this user.")}
                                                                 className="btn btn-sm btn-primary btn-block"
                                                             >
-                                                                Follow
+                                                                Add Friend
                                                             </button>
                                                         )}
                                                         {currentUser ? (
@@ -456,9 +470,16 @@ function ProfileScreen() {
                             </div>
                         </div>
                         <div className="col-3">
-                            <div className="">
-                                <div className="card border-primary">
-                                    <div className="card-header">Friends</div>
+                            <div className="card border-primary">
+                                <div className="card-header">Friends</div>
+                                <div className="card-body">
+                                    {friends.map((friend) => (
+                                        <div key={friend._id}>
+                                            <Link to={`/profile/${friend._id}`}>
+                                                {friend.username}
+                                            </Link>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
                         </div>
