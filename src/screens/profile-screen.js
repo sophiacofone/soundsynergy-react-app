@@ -10,7 +10,7 @@ import {profileThunk, logoutThunk, updateUserThunk} from "../services/users/user
 import {findUserById, findUserByUsername} from "../services/users/users-service";
 import {findAlbumNameId, findArtistNameId, findLikesByUserId,
     findTrackNameId, findAlbumImageId, findArtistImageId, findTrackImageId} from "../spotify/likes-service";
-import {userFollowsUser, findFollowsByFollowerId, findFollowsByFollowedId} from "../services/follows-service";
+import {userFollowsUser, findFollowsByFollowerId, findFollowsByFollowedId, userUnfollowsUser} from "../services/follows-service";
 import {
     findFriendsByUser,
     userSendsFriendRequest,
@@ -33,6 +33,7 @@ function ProfileScreen() {
     const [friendStatus, setFriendStatus] = useState(false);
     const [friendRequests, setFriendRequests] = useState([]);
     const [friends, setFriends] = useState([]);
+    const [followStatus, setFollowStatus] = useState(false);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -84,6 +85,9 @@ function ProfileScreen() {
     };
     const followUser = async () => {
         await userFollowsUser(currentUser._id, profile._id);
+    };
+    const unfollowUser = async () => {
+        await userUnfollowsUser(currentUser._id, profile._id);
     };
     const updateProfile = async () => {
         await dispatch(updateUserThunk(profile));
@@ -147,6 +151,14 @@ function ProfileScreen() {
         }
     };
 
+    const fetchFollowStatus = async () => {
+        const follows = await findFollowsByFollowerId(currentUser._id);
+        const followRecord = follows.find((follow) => follow.followed._id === profile._id);
+        if (followRecord) {
+            setFollowStatus(true);
+        }
+    }
+
     const fetchFriends = async () => {
         // 1. Fetch all the friendObjects for the user.
         const friendObjects = await findFriendsByUser(profile._id);
@@ -187,11 +199,10 @@ function ProfileScreen() {
             fetchFriendRequests();
             fetchFriends();
             fetchFriendStatus();
+            fetchFollowStatus();
         }
     }, [profile]);
-    console.log(friendStatus)
-    console.log(currentUser)
-    console.log(friends)
+    console.log(followStatus)
     return (
         <div className="container mt-2">
 
@@ -310,16 +321,24 @@ function ProfileScreen() {
                                                                 Add Friend
                                                             </button>
                                                         )}
-                                                        {currentUser ? (
+                                                        {currentUser !== null && followStatus ? (
                                                             <button
-                                                                onClick={followUser}
+                                                                onClick={unfollowUser}
                                                                 className="btn btn-sm btn-secondary btn-block"
+                                                            >
+                                                                Unfollow
+                                                            </button>
+                                                        ) : currentUser !== null && friendStatus === null ? (
+                                                            <button
+                                                                onClick={() => alert("Please log in to friend this user.")}
+                                                                className="btn btn-sm btn-primary btn-block"
                                                             >
                                                                 Follow
                                                             </button>
+
                                                         ) : (
                                                             <button
-                                                                onClick={() => alert("Please log in to follow this user.")}
+                                                                onClick={followUser}
                                                                 className="btn btn-sm btn-secondary btn-block"
                                                             >
                                                                 Follow
