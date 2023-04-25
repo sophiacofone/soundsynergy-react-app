@@ -3,12 +3,23 @@ import {useDispatch, useSelector} from "react-redux";
 import {useNavigate, useParams} from "react-router";
 import {Link} from "react-router-dom";
 
+import FriendRequestNotification from "../components/friend-request";
+
+import { io } from "socket.io-client";
+
 import {profileThunk, logoutThunk, updateUserThunk} from "../services/users/users-thunks";
 
 import {findUserById, findUserByUsername} from "../services/users/users-service";
 import {findAlbumNameId, findArtistNameId, findLikesByUserId,
     findTrackNameId, findAlbumImageId, findArtistImageId, findTrackImageId} from "../spotify/likes-service";
 import {userFollowsUser, findFollowsByFollowerId, findFollowsByFollowedId} from "../services/follows-service";
+import {
+    findFriendsByUser,
+    userSendsFriendRequest,
+    userAcceptsFriendRequest,
+    userRejectsFriendRequest,
+    findFriendRequestsForUser
+} from "../services/friends-service";
 
 
 function ProfileScreen() {
@@ -21,9 +32,13 @@ function ProfileScreen() {
     const [follows, setFollows] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [searchInput, setSearchInput] = useState("");
+    const [friendStatus, setFriendStatus] = useState(false);
+    const [friendRequests, setFriendRequests] = useState([]);
+
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const socket = io("http://localhost:4000");
 
     const fetchFollowing = async () => {
         const following = await findFollowsByFollowerId(profile._id);
@@ -94,6 +109,85 @@ function ProfileScreen() {
     };
 
     useEffect(() => {
+        const socket = io("http://localhost:4000");
+        return () => {
+            socket.disconnect();
+        };
+    }, []);
+
+    const sendFriendRequest = async () => {
+        await userSendsFriendRequest(currentUser._id, profile._id, "Hello, I'd like to be friends!");
+        setFriendStatus("pending");
+
+        socket.emit("sendFriendRequest", { user1: currentUser._id, user2: profile._id });
+    };
+
+    const acceptFriendRequest = async (request) => {
+        await userAcceptsFriendRequest(currentUser._id, request.user1);
+        setFriendStatus("accepted");
+
+        socket.emit("acceptFriendRequest", { user1: currentUser._id, user2: request.user1 });
+
+        // Update the friendRequests state
+        setFriendRequests((prevRequests) =>
+            prevRequests.filter((prevRequest) => prevRequest._id !== request._id)
+        );
+    };
+
+    const rejectFriendRequest = async (request) => {
+        await userRejectsFriendRequest(currentUser._id, request.user1);
+        setFriendStatus("rejected");
+
+        socket.emit("rejectFriendRequest", { user1: currentUser._id, user2: request.user1 });
+
+        // Update the friendRequests state
+        setFriendRequests((prevRequests) =>
+            prevRequests.filter((prevRequest) => prevRequest._id !== request._id)
+        );
+    };
+
+    const fetchFriendStatus = async () => {
+        const friends = await findFriendsByUser(currentUser);
+        const friendRecord = friends.find(
+            (friend) =>
+                (friend.user1 === currentUser && friend.user2 === profile) ||
+                (friend.user1 === profile && friend.user2 === currentUser));
+        if (friendRecord) {
+            setFriendStatus(friendRecord.status);
+        }
+    };
+
+
+
+    const fetchFriendRequests = async () => {
+        // Replace this with the function to fetch friend requests from your backend
+        const requests = await findFriendRequestsForUser(currentUser._id);
+        setFriendRequests(requests);
+    };
+
+    useEffect(() => {
+        socket.on("friendRequest", (data) => {
+            console.log("Friend request received:", data);
+            // Update the component state if necessary
+        });
+
+        socket.on("friendRequestAccepted", (data) => {
+            console.log("Friend request accepted:", data);
+            // Update the component state if necessary
+        });
+
+        socket.on("friendRequestRejected", (data) => {
+            console.log("Friend request rejected:", data);
+            // Update the component state if necessary
+        });
+
+        // Clean up the connection when the component is unmounted
+        return () => {
+            socket.disconnect();
+        };
+    }, []);
+
+    useEffect(() => {
         loadScreen();
     }, [userId]);
 
@@ -102,6 +196,7 @@ function ProfileScreen() {
             fetchLikes();
             fetchFollowing();
             fetchFollowers();
+            fetchFriendRequests();
         }
     }, [profile]);
 
@@ -189,15 +284,30 @@ function ProfileScreen() {
                                                     <>
                                                         {currentUser ? (
                                                             <button
-                                                                onClick={followUser}
+                                                                onClick={sendFriendRequest}
                                                                 className="btn btn-sm btn-primary btn-block"
+                                                            >
+                                                                Add Friend
+                                                            </button>
+                                                        ) : (
+                                                            <button
+                                                                onClick={() => alert("Please log in to friend this user.")}
+                                                                className="btn btn-sm btn-primary btn-block"
+                                                            >
+                                                                Follow
+                                                            </button>
+                                                        )}
+                                                        {currentUser ? (
+                                                            <button
+                                                                onClick={followUser}
+                                                                className="btn btn-sm btn-secondary btn-block"
                                                             >
                                                                 Follow
                                                             </button>
                                                         ) : (
                                                             <button
                                                                 onClick={() => alert("Please log in to follow this user.")}
-                                                                className="btn btn-sm btn-primary btn-block"
+                                                                className="btn btn-sm btn-secondary btn-block"
                                                             >
                                                                 Follow
                                                             </button>
@@ -336,14 +446,7 @@ function ProfileScreen() {
                                 </div>
                             </div>
                         )}
-                        <div className="col-2">
-                            <div className="">
-                                <div className="card border-primary">
-                                    <div className="card-header">Shares</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-2">
+                        <div className="col-3">
                             <div className="">
                                 <div className="card border-primary">
                                     <div className="card-header">Following</div>
@@ -363,7 +466,7 @@ function ProfileScreen() {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-2">
+                        <div className="col-3">
                             <div className="">
                                 <div className="card border-primary">
                                     <div className="card-header">Followers</div>
@@ -380,6 +483,37 @@ function ProfileScreen() {
                                             ))}
                                         </ul>
                                     )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="row mt-2">
+                        <div className="col-6">
+                            <div className="">
+                                <div className="card border-primary">
+                                    <div className="card-header">Friend Shares</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-3">
+                            <div className="">
+                                <div className="card border-primary">
+                                    <div className="card-header">Friends</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-3">
+                            <div className="card border-primary">
+                                <div className="card-header">Friend Requests</div>
+                                <div className="card-body">
+                                    {friendRequests.map((request) => (
+                                        <FriendRequestNotification
+                                            key={request._id}
+                                            request={request}
+                                            onAccept={acceptFriendRequest}
+                                            onReject={rejectFriendRequest}
+                                        />
+                                    ))}
                                 </div>
                             </div>
                         </div>
