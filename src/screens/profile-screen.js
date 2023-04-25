@@ -16,7 +16,7 @@ import {
     userSendsFriendRequest,
     userAcceptsFriendRequest,
     userRejectsFriendRequest,
-    findFriendRequestsForUser
+    findFriendRequestsForUser, userUnfriendsUser
 } from "../services/friends-service";
 
 
@@ -33,8 +33,6 @@ function ProfileScreen() {
     const [friendStatus, setFriendStatus] = useState(false);
     const [friendRequests, setFriendRequests] = useState([]);
     const [friends, setFriends] = useState([]);
-    const [username, setUsername] = useState("");
-
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -112,6 +110,13 @@ function ProfileScreen() {
         setFriendStatus("pending");
     };
 
+    const unfriendUser = async () => {
+        await userUnfriendsUser(currentUser._id, profile._id);
+        setFriendStatus(false);
+        // Update the friends state
+        setFriends((prevFriends) => prevFriends.filter((prevFriend) => prevFriend._id !== profile._id));
+    }
+
     const acceptFriendRequest = async (request) => {
         await userAcceptsFriendRequest(currentUser._id, request.user1);
         setFriendStatus("accepted");
@@ -143,14 +148,25 @@ function ProfileScreen() {
     };
 
     const fetchFriends = async () => {
+        // 1. Fetch all the friendObjects for the user.
         const friendObjects = await findFriendsByUser(profile._id);
-        const friendsList = await Promise.all(
-            friendObjects.map(async (friend) => {
-                const friendData = await findUserById(friend.user2);
-                return friendData;
-            })
-        );
-        setFriends(friendsList);
+
+        // 2. Filter the friendObjects array to only include the ones where the status is "accepted".
+        const acceptedFriendObjects = friendObjects.filter((friend) => friend.status === "accepted");
+
+        // 3. For each of the filtered friendObjects, determine which user ID is the friend's ID (the user that is not the current user).
+        const friendIds = acceptedFriendObjects.map((friend) => friend.user1 === profile._id ? friend.user2 : friend.user1);
+
+        // 4. Fetch the username for each friend's ID.
+        const friendDataPromises = friendIds.map(async (friendId) => {
+            const friendData = await findUserById(friendId);
+            return friendData;
+        });
+
+        const friendData = await Promise.all(friendDataPromises);
+
+        // 5. Return the finalized list of friend objects with the usernames.
+        setFriends(friendData.map((friend, index) => ({...acceptedFriendObjects[index], username: friend.username})));
     };
 
     const fetchFriendRequests = async () => {
@@ -170,10 +186,12 @@ function ProfileScreen() {
             fetchFollowers();
             fetchFriendRequests();
             fetchFriends();
-            fetchFriendStatus(); // Add this line
+            fetchFriendStatus();
         }
     }, [profile]);
     console.log(friendStatus)
+    console.log(currentUser)
+    console.log(friends)
     return (
         <div className="container mt-2">
 
@@ -256,16 +274,37 @@ function ProfileScreen() {
                                             <div>
                                                 {userId !== undefined && (
                                                     <>
-                                                        {currentUser ? (
+                                                        {currentUser !== null && friendStatus === "pending" ? (
                                                             <button
                                                                 onClick={sendFriendRequest}
+                                                                className="btn btn-sm btn-primary btn-block disabled"
+                                                            >
+                                                                Pending
+                                                            </button>
+                                                        ) : currentUser !== null && friendStatus === null ? (
+                                                            <button
+                                                                onClick={() => alert("Please log in to friend this user.")}
                                                                 className="btn btn-sm btn-primary btn-block"
                                                             >
                                                                 Add Friend
                                                             </button>
+                                                        ) : currentUser !== null && friendStatus === "accepted" ? (
+                                                            <button
+                                                                onClick={unfriendUser}
+                                                                className="btn btn-sm btn-danger btn-block"
+                                                            >
+                                                                Unfriend
+                                                            </button>
+                                                        ) : currentUser !== null && friendStatus === "rejected" ? (
+                                                            <button
+                                                                onClick={sendFriendRequest}
+                                                                className="btn btn-sm btn-primary btn-block disabled"
+                                                            >
+                                                                Rejected
+                                                            </button>
                                                         ) : (
                                                             <button
-                                                                onClick={() => alert("Please log in to friend this user.")}
+                                                                onClick={sendFriendRequest}
                                                                 className="btn btn-sm btn-primary btn-block"
                                                             >
                                                                 Add Friend
