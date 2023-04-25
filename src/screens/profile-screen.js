@@ -5,8 +5,6 @@ import {Link} from "react-router-dom";
 
 import FriendRequestNotification from "../components/friend-request";
 
-import { io } from "socket.io-client";
-
 import {profileThunk, logoutThunk, updateUserThunk} from "../services/users/users-thunks";
 
 import {findUserById, findUserByUsername} from "../services/users/users-service";
@@ -38,7 +36,6 @@ function ProfileScreen() {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const socket = io("http://localhost:4000");
 
     const fetchFollowing = async () => {
         const following = await findFollowsByFollowerId(profile._id);
@@ -108,26 +105,14 @@ function ProfileScreen() {
         }
     };
 
-    useEffect(() => {
-        const socket = io("http://localhost:4000");
-        return () => {
-            socket.disconnect();
-        };
-    }, []);
-
     const sendFriendRequest = async () => {
         await userSendsFriendRequest(currentUser._id, profile._id, "Hello, I'd like to be friends!");
         setFriendStatus("pending");
-
-        socket.emit("sendFriendRequest", { user1: currentUser._id, user2: profile._id });
     };
 
     const acceptFriendRequest = async (request) => {
         await userAcceptsFriendRequest(currentUser._id, request.user1);
         setFriendStatus("accepted");
-
-        socket.emit("acceptFriendRequest", { user1: currentUser._id, user2: request.user1 });
-
         // Update the friendRequests state
         setFriendRequests((prevRequests) =>
             prevRequests.filter((prevRequest) => prevRequest._id !== request._id)
@@ -137,9 +122,6 @@ function ProfileScreen() {
     const rejectFriendRequest = async (request) => {
         await userRejectsFriendRequest(currentUser._id, request.user1);
         setFriendStatus("rejected");
-
-        socket.emit("rejectFriendRequest", { user1: currentUser._id, user2: request.user1 });
-
         // Update the friendRequests state
         setFriendRequests((prevRequests) =>
             prevRequests.filter((prevRequest) => prevRequest._id !== request._id)
@@ -164,28 +146,6 @@ function ProfileScreen() {
         const requests = await findFriendRequestsForUser(currentUser._id);
         setFriendRequests(requests);
     };
-
-    useEffect(() => {
-        socket.on("friendRequest", (data) => {
-            console.log("Friend request received:", data);
-            // Update the component state if necessary
-        });
-
-        socket.on("friendRequestAccepted", (data) => {
-            console.log("Friend request accepted:", data);
-            // Update the component state if necessary
-        });
-
-        socket.on("friendRequestRejected", (data) => {
-            console.log("Friend request rejected:", data);
-            // Update the component state if necessary
-        });
-
-        // Clean up the connection when the component is unmounted
-        return () => {
-            socket.disconnect();
-        };
-    }, []);
 
     useEffect(() => {
         loadScreen();
