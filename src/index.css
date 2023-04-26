@@ -25,6 +25,12 @@ body {
     --bs-btn-border-color: #ef3030;
 }
 
+/*.blur {
+    background-color: rgba(255, 255, 255, 0.5); !* Fallback for older browsers *!
+    opacity: 0.5; !* Fallback for older browsers *!
+    backdrop-filter: blur(2px); !* This is what blurs the content *!
+}*/
+
 /*.modal {
     z-index: 9999;
 }*/

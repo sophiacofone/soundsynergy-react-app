@@ -8,17 +8,10 @@ import FriendRequestNotification from "../components/friend-request";
 import {profileThunk, logoutThunk, updateUserThunk} from "../services/users/users-thunks";
 
 import {findUserById, findUserByUsername} from "../services/users/users-service";
-import {findAlbumNameId, findArtistNameId, findLikesByUserId,
-    findTrackNameId, findAlbumImageId, findArtistImageId, findTrackImageId} from "../spotify/likes-service";
+import {findAlbumNameId, findArtistNameId, findLikesByUserId, findTrackNameId, findAlbumImageId, findArtistImageId, findTrackImageId} from "../spotify/likes-service";
 import {userFollowsUser, findFollowsByFollowerId, findFollowsByFollowedId, userUnfollowsUser} from "../services/follows-service";
-import {
-    findFriendsByUser,
-    userSendsFriendRequest,
-    userAcceptsFriendRequest,
-    userRejectsFriendRequest,
-    findFriendRequestsForUser, userUnfriendsUser
-} from "../services/friends-service";
-
+import {findFriendsByUser, userSendsFriendRequest, userAcceptsFriendRequest, userRejectsFriendRequest, findFriendRequestsForUser, userUnfriendsUser} from "../services/friends-service";
+import {findSharedItemsByShareReceiver} from "../services/shared-service";
 
 function ProfileScreen() {
     const {userId} = useParams();
@@ -34,6 +27,7 @@ function ProfileScreen() {
     const [friendRequests, setFriendRequests] = useState([]);
     const [friends, setFriends] = useState([]);
     const [followStatus, setFollowStatus] = useState(false);
+    const [sharedItems, setSharedItems] = useState([]);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -79,6 +73,35 @@ function ProfileScreen() {
         }
         const response = await dispatch(profileThunk());
         setProfile(response.payload);
+    };
+    const fetchSharedItems = async () => {
+        const sharedItemsData = await findSharedItemsByShareReceiver(profile._id);
+        const sharedItemsDataImg = await Promise.all(
+            sharedItemsData.map(async (sharedItemsData) => {
+                let imageShared;
+                if (sharedItemsData.type === "album") {
+                    imageShared = await findAlbumImageId(sharedItemsData.musicThingId);
+                } else if (sharedItemsData.type === "artist") {
+                    imageShared = await findArtistImageId(sharedItemsData.musicThingId);
+                } else if (sharedItemsData.type === "track") {
+                    imageShared = await findTrackImageId(sharedItemsData.musicThingId);
+                }
+                return {
+                    ...sharedItemsData,
+                    imageShared,
+                };
+            })
+        );
+        const sharedItemsDataImgName = await Promise.all(
+            sharedItemsDataImg.map(async (sharedItemsDataImg) => {
+                const nameShared = await findUserById(sharedItemsDataImg.sharer);
+                return {
+                    ...sharedItemsDataImg,
+                    nameShared,
+                }
+            })
+        );
+        setSharedItems(sharedItemsDataImgName);
     };
     const loadScreen = async () => {
         await fetchProfile();
@@ -200,9 +223,10 @@ function ProfileScreen() {
             fetchFriends();
             fetchFriendStatus();
             fetchFollowStatus();
+            fetchSharedItems();
         }
     }, [profile]);
-    console.log(followStatus)
+    console.log(friends.length)
     return (
         <div className="container mt-2">
 
@@ -248,16 +272,16 @@ function ProfileScreen() {
                                         </div>
                                         <div className="col-5">
                                             <div className="mt-2"><i
-                                                    className="bi bi-people-fill"></i> {profile.city}
-                                                    <span className="text-muted"> Following</span>
+                                                    className="bi bi-people-fill"></i> {friends.length}
+                                                    <span className="text-muted"> Friends</span>
                                                 </div>
                                             <div className="mt-2"><i
-                                                    className="bi bi-people-fill"></i> {profile.city}
-                                                    <span className="text-muted"> Followers</span>
+                                                    className="bi bi-people-fill"></i> {following.length}
+                                                    <span className="text-muted"> Following</span>
                                             </div>
-                                            <div className="mt-2"><i
-                                                    className="bi bi-cassette"></i> {profile.city}
-                                                    <span className="text-muted"> Songs Shared</span>
+                                            <div className="mt-2 mb-2"><i
+                                                    className="bi bi-cassette"></i> {likes.length}
+                                                    <span className="text-muted"> Likes </span>
                                             </div>
                                             {userId === undefined &&
                                                 <div>
@@ -521,39 +545,84 @@ function ProfileScreen() {
                     </div>
                     <div className="row mt-2">
                         <div className="col-6">
-                            <div className="">
-                                <div className="card border-primary">
-                                    <div className="card-header">Friend Shares</div>
-                                </div>
+                            <div className="card border-primary">
+                                <div className="card-header">Friend Shares</div>
+                                {sharedItems.length > 0 ? (
+                                    <ul className="list-group list-group-flush overflow-auto shadow" style={{maxHeight: "235px"}}>
+                                        {sharedItems.map((sharedItem) => (
+                                            <div key={sharedItem._id}>
+                                                <li className="list-group-item">
+                                                    <Link to={`/search/artist/${sharedItem.musicThingId}`} style={{ textDecoration: 'none' }}>
+                                                        <div className="card text-white mb-1">
+                                                            <div className="card-body p-2">
+                                                                <div className="row">
+                                                                    <div className="col-10 d-flex justify-content-center align-items-center">
+                                                                        <p className="card-text"><strong>{sharedItem.nameShared.username}</strong> thinks you would love <strong>{sharedItem.name}</strong>!</p>
+                                                                    </div>
+                                                                    <div className="col-2">
+                                                                        <img
+                                                                            src={sharedItem.imageShared}
+                                                                            className="img-thumbnail"
+                                                                            style={{ width: "4rem", height: "4rem" }}
+                                                                            alt={sharedItem.name}
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </Link>
+                                                </li>
+                                            </div>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <div className="card-body">No shares found.</div>
+                                )}
                             </div>
                         </div>
                         <div className="col-3">
-                            <div className="card border-primary">
-                                <div className="card-header">Friends</div>
-                                <div className="card-body">
-                                    {friends.map((friend) => (
-                                        <div key={friend._id}>
-                                            <Link to={`/profile/${friend._id}`}>
-                                                {friend.username}
-                                            </Link>
-                                        </div>
-                                    ))}
+                            <div className="">
+                                <div className="card border-primary">
+                                    <div className="card-header">Friends</div>
+                                        <ul className="list-group list-group-flush overflow-auto shadow" style={{maxHeight: "235px"}}>
+                                            {friends.map((friend) => (
+                                                <div key={friend._id}>
+                                                    <li className="list-group-item">
+                                                    <Link to={`/profile/${friend._id}`}>
+                                                        <p>{friend.username}</p>
+                                                    </Link>
+                                                    </li>
+                                                </div>
+                                            ))}
+                                        </ul>
                                 </div>
                             </div>
                         </div>
                         <div className="col-3">
                             <div className="card border-primary">
                                 <div className="card-header">Friend Requests</div>
-                                <div className="card-body">
-                                    {friendRequests.map((request) => (
-                                        <FriendRequestNotification
-                                            key={request._id}
-                                            request={request}
-                                            onAccept={acceptFriendRequest}
-                                            onReject={rejectFriendRequest}
-                                        />
-                                    ))}
-                                </div>
+                                {friendRequests.length > 0 ? (
+                                    <ul className="list-group list-group-flush overflow-auto shadow" style={{maxHeight: "235px"}}>
+                                        {friendRequests.map((request) => (
+                                            <div key={request._id}>
+                                                <li className="list-group-item">
+                                                    <div className={`${userId ? 'blur' : ''}`}>
+                                                        <FriendRequestNotification
+                                                            key={request._id}
+                                                            request={request}
+                                                            onAccept={acceptFriendRequest}
+                                                            onReject={rejectFriendRequest}
+                                                        />
+                                                    </div>
+                                                </li>
+                                            </div>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <ul className="list-group list-group-flush overflow-auto shadow" style={{maxHeight: "235px"}}>
+                                        <li className="list-group-item">No friend requests found</li>
+                                    </ul>
+                                )}
                             </div>
                         </div>
                     </div>

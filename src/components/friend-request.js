@@ -19,8 +19,8 @@ function FriendRequestNotification({ request, onAccept, onReject }) {
             <p>Friend request from {username}</p>
             {status === "pending" && (
                 <div>
-                    <button onClick={() => onAccept(request)}>Accept</button>
-                    <button onClick={() => onReject(request)}>Reject</button>
+                    <button className="btn btn-primary" onClick={() => onAccept(request)}>Accept</button>
+                    <button className="btn btn-danger" onClick={() => onReject(request)}>Reject</button>
                 </div>
             )}
             {status === "accepted" && <p>Request accepted</p>}
