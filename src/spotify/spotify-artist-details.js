@@ -46,7 +46,7 @@ function SpotifyArtistDetailsScreen() {
             const randomFriendName = randomFriendData.username;
 
             const shareConfirmation = window.confirm(
-                `Share this content with ${randomFriendName}?`
+                `${randomFriendName} would love this content! Share it with them?`
             );
 
             if (shareConfirmation) {

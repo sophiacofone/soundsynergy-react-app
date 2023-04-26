@@ -3,6 +3,10 @@ import React, { useEffect, useState } from "react";
 import { getTrack } from "./spotify-service";
 import { useSelector } from "react-redux";
 import {findLikesByUserId, userLikesTrack, userUnlikesTrack} from "./likes-service";
+import ShareButton from "../components/share-button";
+import {findFriendsByUser} from "../services/friends-service";
+import {findUserById} from "../services/users/users-service";
+import {userSharesItem} from "../services/shared-service";
 
 function SpotifyTrackDetailsScreen() {
     const { currentUser } = useSelector((state) => state.users);
@@ -10,6 +14,48 @@ function SpotifyTrackDetailsScreen() {
 
   const [track, setTrack] = useState({});
   const [isLiked, setIsLiked] = useState(false);
+
+  async function handleShareClick(contentItem) {
+    try {
+      const friends = await findFriendsByUser(currentUser._id);
+      if (friends.length === 0) {
+        alert('You have no friends to share this content with.');
+        return;
+      }
+
+      const validFriends = friends.filter(friend => friend.user1 === currentUser._id || friend.user2 === currentUser._id);
+      const randomFriendIndex = Math.floor(Math.random() * validFriends.length);
+      const randomFriend = validFriends[randomFriendIndex];
+      const friendId = randomFriend.user1 === currentUser._id ? randomFriend.user2 : randomFriend.user1;
+
+      const randomFriendData = await findUserById(friendId);
+      const randomFriendName = randomFriendData.username;
+
+      const shareConfirmation = window.confirm(
+          `${randomFriendName} would love this content! Share it with them?`
+      );
+
+      if (shareConfirmation) {
+        userSharesItem(
+            currentUser._id,
+            friendId,
+            contentItem.type,
+            contentItem.musicThingId,
+            contentItem.name
+        )
+            .then(() => {
+              alert('Content shared successfully.');
+            })
+            .catch((error) => {
+              console.error('Error sharing content:', error);
+              alert('An error occurred while sharing content.');
+            });
+      }
+    } catch (error) {
+      console.error('Error fetching friends:', error);
+      alert('An error occurred while fetching friends.');
+    }
+  }
 
   const likeTrack = async () => {
     const response = await userLikesTrack(currentUser._id, id, track.name, track.album.images[0].url);
@@ -76,7 +122,18 @@ function SpotifyTrackDetailsScreen() {
                     <div className="col-3">
                       {currentUser && (
                           isLiked ? (
-                              <button onClick={unlikeTrack} className="btn btn-sm btn-danger">Dislike</button>
+                              <div>
+                                <button onClick={unlikeTrack} className="btn btn-sm btn-danger">Dislike</button>
+                                <ShareButton
+                                    onClick={() =>
+                                        handleShareClick({
+                                          type: "track",
+                                          musicThingId: track.id,
+                                          name: track.name,
+                                        })
+                                    }
+                                />
+                              </div>
                           ) : (
                               <button onClick={likeTrack} className="btn btn-sm btn-success">Like</button>
                           )
