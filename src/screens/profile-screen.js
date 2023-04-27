@@ -305,7 +305,6 @@ function ProfileScreen() {
         }
     }, [profile]);
 
-    console.log(likedGenres)
     return (
         <div className="container mt-2">
 
@@ -398,7 +397,7 @@ function ProfileScreen() {
                                                 </div>
                                             }
                                             <div>
-                                                {userId !== undefined && currentUser.role === "USER" &&  (
+                                                {userId !== undefined && currentUser.role === "USER" && profile.role === "USER" &&  (
                                                     <>
                                                         {currentUser !== null && friendStatus === "pending" ? (
                                                             <button
@@ -436,6 +435,10 @@ function ProfileScreen() {
                                                                 Add Friend
                                                             </button>
                                                         )}
+                                                    </>
+                                                )}
+                                                {userId !== undefined && currentUser.role === "USER" &&   (
+                                                    <>
                                                         {currentUser !== null && followStatus ? (
                                                             <button
                                                                 onClick={unfollowUser}
@@ -460,7 +463,8 @@ function ProfileScreen() {
                                                             </button>
                                                         )}
                                                     </>
-                                                )}
+                                                    )}
+
                                             </div>
                                         </div>
                                     </div>
@@ -593,7 +597,6 @@ function ProfileScreen() {
                                 </div>
                             </div>
                         )}
-                        {profile.role === "USER" ? (
                             <div className="col-3">
                                 <div className="">
                                     <div className="card border-primary">
@@ -616,7 +619,6 @@ function ProfileScreen() {
                                     </div>
                                 </div>
                             </div>
-                        ) : null }
                         {profile.role === "USER" ? (
                             <div className="col-3">
                             <div className="">
@@ -644,7 +646,119 @@ function ProfileScreen() {
                         </div>
                         ) : null }
                         {profile.role === "BUSINESS" ? (
-                            <div className="col-3">
+                        <div className="col-3">
+                            <div className="">
+                                <div className="card border-primary">
+                                    <div className="card-header">Followers</div>
+                                    {follows.length > 0 ?(
+                                        <ul className="list-group list-group-flush overflow-auto shadow" style={{maxHeight: "235px"}}>
+                                            {follows.map((follow) => (
+                                                <div key={follow.follower._id}>
+                                                    <li className="list-group-item">
+                                                        <Link to={`/profile/${follow.follower._id}`}>
+                                                            <p>{follow.follower.username}</p>
+                                                        </Link>
+                                                    </li>
+                                                </div>
+                                            ))}
+                                        </ul>
+                                    ) : (
+                                        <div className="card-body">No Followers found.</div>
+                                        )}
+                                </div>
+                            </div>
+                        </div>
+                        ) : null }
+                    </div>
+                    {profile.role === "USER" ? (
+                    <div className="row mt-2">
+                        <div className="col-6">
+                            <div className="card border-primary">
+                                <div className="card-header">Friend Shares</div>
+                                {sharedItems.length > 0 ? (
+                                    <ul className="list-group list-group-flush overflow-auto shadow" style={{maxHeight: "235px"}}>
+                                        {sharedItems.map((sharedItem) => (
+                                            <div key={sharedItem._id}>
+                                                <li className="list-group-item">
+                                                    <Link to={`/search/artist/${sharedItem.musicThingId}`} style={{ textDecoration: 'none' }}>
+                                                        <div className="card text-white mb-1">
+                                                            <div className="card-body p-2">
+                                                                <div className="row">
+                                                                    <div className="col-10 d-flex justify-content-center align-items-center">
+                                                                        <p className="card-text"><strong>{sharedItem.nameShared.username}</strong> thinks you would love <strong>{sharedItem.name}</strong>!</p>
+                                                                    </div>
+                                                                    <div className="col-2">
+                                                                        <img
+                                                                            src={sharedItem.imageShared}
+                                                                            className="img-thumbnail"
+                                                                            style={{ width: "4rem", height: "4rem" }}
+                                                                            alt={sharedItem.name}
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </Link>
+                                                </li>
+                                            </div>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <div className="card-body">No shares found.</div>
+                                )}
+                            </div>
+                        </div>
+                        <div className="col-3">
+                            <div className="">
+                                <div className="card border-primary">
+                                    <div className="card-header">Friends</div>
+                                    {friends.length > 0 ? (
+                                        <ul className="list-group list-group-flush overflow-auto shadow" style={{maxHeight: "235px"}}>
+                                            {friends.map((friend) => (
+                                                <div key={friend._id}>
+                                                    <li className="list-group-item">
+                                                    <Link to={`/profile/${friend._id}`}>
+                                                        <p>{friend.username}</p>
+                                                    </Link>
+                                                    </li>
+                                                </div>
+                                            ))}
+                                        </ul>
+                                    ) : (
+                                        <div className="card-body">No friends found.</div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-3">
+                            <div className="card border-primary">
+                                <div className="card-header">Friend Requests</div>
+                                {friendRequests.length > 0 ? (
+                                    <ul className="list-group list-group-flush overflow-auto shadow" style={{maxHeight: "235px"}}>
+                                        {friendRequests.map((request) => (
+                                            <div key={request._id}>
+                                                <li className="list-group-item">
+                                                    <div className={`${userId ? 'blur' : ''}`}>
+                                                        <FriendRequestNotification
+                                                            key={request._id}
+                                                            request={request}
+                                                            onAccept={acceptFriendRequest}
+                                                            onReject={rejectFriendRequest}
+                                                        />
+                                                    </div>
+                                                </li>
+                                            </div>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <div className="card-body">No friend requests found</div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                    ) : null }
+                    {profile.role === "BUSINESS" ? (
+                    <div className="row mt-2">
                             <div className="">
                                 <div className="">
                                     <div className="card border-primary">
@@ -654,16 +768,22 @@ function ProfileScreen() {
                                                 Change
                                             </button>
                                         </div>
-                                        <ul
-                                            className="list-group list-group-flush overflow-auto shadow"
-                                            style={{ maxHeight: '235px' }}
-                                        >
-                                            {favoriteGenres.map((genre, index) => (
-                                                <li key={index} className="list-group-item">
-                                                    <p>{genre}</p>
-                                                </li>
-                                            ))}
-                                        </ul>
+                                        {favoriteGenres.length !== 0 ? (
+                                            <div>
+                                            <ul
+                                                className="list-group list-group-flush overflow-auto shadow"
+                                                style={{ maxHeight: '235px' }}
+                                            >
+                                                {favoriteGenres.map((genre, index) => (
+                                                    <li key={index} className="list-group-item">
+                                                        <p>{genre}</p>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                            </div>
+                                        ) : (
+                                            <div className="card-body">No favorite genres found.</div>
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -1206,118 +1326,6 @@ function ProfileScreen() {
                                     </div>
                                 </div>
                             )}
-                            </div>
-                        ) : null }
-                        {profile.role === "BUSINESS" ? (
-                        <div className="col-3">
-                            <div className="">
-                                <div className="card border-primary">
-                                    <div className="card-header">Followers</div>
-                                    {follows.length > 0 ?(
-                                        <ul className="list-group list-group-flush overflow-auto shadow" style={{maxHeight: "235px"}}>
-                                            {follows.map((follow) => (
-                                                <div key={follow.follower._id}>
-                                                    <li className="list-group-item">
-                                                        <Link to={`/profile/${follow.follower._id}`}>
-                                                            <p>{follow.follower.username}</p>
-                                                        </Link>
-                                                    </li>
-                                                </div>
-                                            ))}
-                                        </ul>
-                                    ) : (
-                                        <div className="card-body">No Followers found.</div>
-                                        )}
-                                </div>
-                            </div>
-                        </div>
-                        ) : null }
-                    </div>
-                    {profile.role === "USER" ? (
-                    <div className="row mt-2">
-                        <div className="col-6">
-                            <div className="card border-primary">
-                                <div className="card-header">Friend Shares</div>
-                                {sharedItems.length > 0 ? (
-                                    <ul className="list-group list-group-flush overflow-auto shadow" style={{maxHeight: "235px"}}>
-                                        {sharedItems.map((sharedItem) => (
-                                            <div key={sharedItem._id}>
-                                                <li className="list-group-item">
-                                                    <Link to={`/search/artist/${sharedItem.musicThingId}`} style={{ textDecoration: 'none' }}>
-                                                        <div className="card text-white mb-1">
-                                                            <div className="card-body p-2">
-                                                                <div className="row">
-                                                                    <div className="col-10 d-flex justify-content-center align-items-center">
-                                                                        <p className="card-text"><strong>{sharedItem.nameShared.username}</strong> thinks you would love <strong>{sharedItem.name}</strong>!</p>
-                                                                    </div>
-                                                                    <div className="col-2">
-                                                                        <img
-                                                                            src={sharedItem.imageShared}
-                                                                            className="img-thumbnail"
-                                                                            style={{ width: "4rem", height: "4rem" }}
-                                                                            alt={sharedItem.name}
-                                                                        />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </Link>
-                                                </li>
-                                            </div>
-                                        ))}
-                                    </ul>
-                                ) : (
-                                    <div className="card-body">No shares found.</div>
-                                )}
-                            </div>
-                        </div>
-                        <div className="col-3">
-                            <div className="">
-                                <div className="card border-primary">
-                                    <div className="card-header">Friends</div>
-                                    {friends.length > 0 ? (
-                                        <ul className="list-group list-group-flush overflow-auto shadow" style={{maxHeight: "235px"}}>
-                                            {friends.map((friend) => (
-                                                <div key={friend._id}>
-                                                    <li className="list-group-item">
-                                                    <Link to={`/profile/${friend._id}`}>
-                                                        <p>{friend.username}</p>
-                                                    </Link>
-                                                    </li>
-                                                </div>
-                                            ))}
-                                        </ul>
-                                    ) : (
-                                        <div className="card-body">No friends found.</div>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-3">
-                            <div className="card border-primary">
-                                <div className="card-header">Friend Requests</div>
-                                {friendRequests.length > 0 ? (
-                                    <ul className="list-group list-group-flush overflow-auto shadow" style={{maxHeight: "235px"}}>
-                                        {friendRequests.map((request) => (
-                                            <div key={request._id}>
-                                                <li className="list-group-item">
-                                                    <div className={`${userId ? 'blur' : ''}`}>
-                                                        <FriendRequestNotification
-                                                            key={request._id}
-                                                            request={request}
-                                                            onAccept={acceptFriendRequest}
-                                                            onReject={rejectFriendRequest}
-                                                        />
-                                                    </div>
-                                                </li>
-                                            </div>
-                                        ))}
-                                    </ul>
-                                ) : (
-                                    <div className="card-body">No friend requests found</div>
-                                )}
-                            </div>
-                        </div>
                     </div>
                     ) : null }
                     <div className="mt-2">
