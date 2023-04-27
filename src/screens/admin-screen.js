@@ -2,7 +2,7 @@ import React from "react";
 
 import AdminUsers from "../components/admin-users";
 import AdminFriends from "../components/admin-friends";
-
+import AdminFollows from "../components/admin-follows";
 
 function AdminScreen() {
     return (
@@ -30,7 +30,7 @@ function AdminScreen() {
                     <AdminFriends/>
                 </div>
                 <div className="tab-pane fade" id="follows" role="tabpanel">
-
+                    <AdminFollows/>
                 </div>
             </div>
         </div>

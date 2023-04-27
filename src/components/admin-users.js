@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {findAllUsersThunk, updateUserThunk} from "../services/users/users-thunks";
+import {findAllUsersThunk, updateUserThunk, deleteUserThunk} from "../services/users/users-thunks";
 import {useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router";
 import {deleteUser, findUserByUsername} from "../services/users/users-service";
@@ -32,6 +32,7 @@ export default function AdminUsers() {
         event.preventDefault();
         await deleteUser(selectedUser._id);
         setSelectedUser(null);
+        dispatch(deleteUserThunk());
     };
 
     const filteredUsers = selectedRole
