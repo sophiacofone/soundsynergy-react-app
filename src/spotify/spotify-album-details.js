@@ -18,7 +18,6 @@ function SpotifyAlbumDetailsScreen() {
   const [album, setAlbum] = useState({});
   const [isLiked, setIsLiked] = useState(false);
 
-
   async function handleShareClick(contentItem) {
     try {
       const friends = await findFriendsByUser(currentUser._id);
@@ -61,14 +60,13 @@ function SpotifyAlbumDetailsScreen() {
     }
   }
   const likeAlbum = async () => {
-    const response = await userLikesAlbum(currentUser._id, id, album.name, album.images[0].url);
+    const response = await userLikesAlbum(currentUser._id, id, album.name, album.images[0].url, album.genres);
     setIsLiked(true);
   };
   const unlikeAlbum = async () => {
     const response = await userUnlikesAlbum(currentUser._id, id);
     setIsLiked(false);
   };
-
   const checkUserLikedAlbum = async () => {
     if (currentUser) {
       const likes = await findLikesByUserId(currentUser._id);
@@ -189,9 +187,6 @@ function SpotifyAlbumDetailsScreen() {
                     </div>
                   </div>
                 </div>
-                <ul className="list-group list-group-flush">
-                  <li className="list-group-item">friend analysis?</li>
-                </ul>
               </div>
             </div>
         </div>

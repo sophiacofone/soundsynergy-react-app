@@ -19,16 +19,14 @@ function SpotifyArtistDetailsScreen() {
     const [artistTopTracks, setArtistTopTracks] = useState({});
     const [isLiked, setIsLiked] = useState(false);
 
-
     const likeArtist = async () => {
-        const response = await userLikesArtist(currentUser._id, id, artist.name, artist.images[0].url);
+        const response = await userLikesArtist(currentUser._id, id, artist.name, artist.images[0].url, artist.genres);
         setIsLiked(true);
     };
     const unlikeArtist = async () => {
         const response = await userUnlikesArtist(currentUser._id, id);
         setIsLiked(false);
     };
-
     async function handleShareClick(contentItem) {
         try {
             const friends = await findFriendsByUser(currentUser._id);
@@ -70,7 +68,6 @@ function SpotifyArtistDetailsScreen() {
             alert('An error occurred while fetching friends.');
         }
     }
-
     const checkUserLikedArtist = async () => {
         if (currentUser) {
             const likes = await findLikesByUserId(currentUser._id);
@@ -78,7 +75,6 @@ function SpotifyArtistDetailsScreen() {
             setIsLiked(Boolean(artistLike));
         }
     };
-
     const fetchArtist = async () => {
         const response = await getArtist(id);
         setArtist(response);
