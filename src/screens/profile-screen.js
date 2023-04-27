@@ -598,7 +598,7 @@ function ProfileScreen() {
                                 <div className="">
                                     <div className="card border-primary">
                                         <div className="card-header">Liked Genres</div>
-                                        {likedGenres && (
+                                        {likedGenres.length > 0 ? (
                                             <ul className="list-group list-group-flush overflow-auto shadow" style={{maxHeight: "235px"}}>
                                                 {likedGenres.map((genre) => (
                                                     <div>
@@ -608,6 +608,10 @@ function ProfileScreen() {
                                                     </div>
                                                 ))}
                                             </ul>
+                                        ) : (
+                                            <div className="card-body">
+                                                <p className="card-text">You have not liked any genres yet.</p>
+                                            </div>
                                         )}
                                     </div>
                                 </div>
@@ -618,7 +622,7 @@ function ProfileScreen() {
                             <div className="">
                                 <div className="card border-primary">
                                     <div className="card-header">Following</div>
-                                    {following && (
+                                    {following.length > 0 ? (
                                         <ul className="list-group list-group-flush overflow-auto shadow" style={{maxHeight: "235px"}}>
                                             {following.map((follow) => (
                                                 <div key={follow.followed._id}>
@@ -630,6 +634,10 @@ function ProfileScreen() {
                                                 </div>
                                             ))}
                                         </ul>
+                                    ) :
+                                    ( <div className="card-body">
+                                            <p className="card-text">You are not following anyone.</p>
+                                    </div>
                                     )}
                                 </div>
                             </div>
@@ -1205,7 +1213,7 @@ function ProfileScreen() {
                             <div className="">
                                 <div className="card border-primary">
                                     <div className="card-header">Followers</div>
-                                    {follows && (
+                                    {follows.length > 0 ?(
                                         <ul className="list-group list-group-flush overflow-auto shadow" style={{maxHeight: "235px"}}>
                                             {follows.map((follow) => (
                                                 <div key={follow.follower._id}>
@@ -1217,7 +1225,9 @@ function ProfileScreen() {
                                                 </div>
                                             ))}
                                         </ul>
-                                    )}
+                                    ) : (
+                                        <div className="card-body">No Followers found.</div>
+                                        )}
                                 </div>
                             </div>
                         </div>
@@ -1265,6 +1275,7 @@ function ProfileScreen() {
                             <div className="">
                                 <div className="card border-primary">
                                     <div className="card-header">Friends</div>
+                                    {friends.length > 0 ? (
                                         <ul className="list-group list-group-flush overflow-auto shadow" style={{maxHeight: "235px"}}>
                                             {friends.map((friend) => (
                                                 <div key={friend._id}>
@@ -1276,6 +1287,9 @@ function ProfileScreen() {
                                                 </div>
                                             ))}
                                         </ul>
+                                    ) : (
+                                        <div className="card-body">No friends found.</div>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -1300,17 +1314,10 @@ function ProfileScreen() {
                                         ))}
                                     </ul>
                                 ) : (
-                                    <ul className="list-group list-group-flush overflow-auto shadow" style={{maxHeight: "235px"}}>
-                                        <li className="list-group-item">No friend requests found</li>
-                                    </ul>
+                                    <div className="card-body">No friend requests found</div>
                                 )}
                             </div>
                         </div>
-                    </div>
-                    ) : null }
-                    {profile.role === "USER" ? (
-                    <div className="mt-2">
-                        <h4>Favorite Analysis</h4>
                     </div>
                     ) : null }
                     <div className="mt-2">
