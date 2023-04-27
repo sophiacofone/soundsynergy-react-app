@@ -287,7 +287,6 @@ function ProfileScreen() {
         }
     }, [profile]);
 
-    console.log(profile)
     return (
         <div className="container mt-2">
 
@@ -380,7 +379,7 @@ function ProfileScreen() {
                                                 </div>
                                             }
                                             <div>
-                                                {userId !== undefined && (
+                                                {userId !== undefined && currentUser.role === "USER" &&  (
                                                     <>
                                                         {currentUser !== null && friendStatus === "pending" ? (
                                                             <button
