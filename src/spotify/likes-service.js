@@ -41,6 +41,16 @@ export const findTrackImageId = async (trackId) => {
     return response.data;
 };
 
+export const findArtistGenreId = async (artistId) => {
+    const response = await axios.get(`${ARTIST_API}/${artistId}/genre`);
+    return response.data;
+}
+
+export const findTrackGenreId = async (trackId) => {
+    const response = await axios.get(`${TRACKS_API}/${trackId}/genre`);
+    return response.data;
+}
+
 export const userLikesAlbum = async (userId, albumId, name, image, genre) => {
     // Check if album exists in albums collection
     const albumResponse = await axios.get(`${ALBUMS_API}/${albumId}`);

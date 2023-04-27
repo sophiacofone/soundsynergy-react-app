@@ -8,7 +8,7 @@ import FriendRequestNotification from "../components/friend-request";
 import {profileThunk, logoutThunk, updateUserThunk} from "../services/users/users-thunks";
 
 import {findUserById, findUserByUsername} from "../services/users/users-service";
-import {findAlbumNameId, findArtistNameId, findLikesByUserId, findTrackNameId, findAlbumImageId, findArtistImageId, findTrackImageId} from "../spotify/likes-service";
+import {findAlbumNameId, findArtistNameId, findLikesByUserId, findTrackNameId, findAlbumImageId, findArtistImageId, findTrackImageId, findArtistGenreId, findTrackGenreId} from "../spotify/likes-service";
 import {userFollowsUser, findFollowsByFollowerId, findFollowsByFollowedId, userUnfollowsUser} from "../services/follows-service";
 import {findFriendsByUser, userSendsFriendRequest, userAcceptsFriendRequest, userRejectsFriendRequest, findFriendRequestsForUser, userUnfriendsUser} from "../services/friends-service";
 import {findSharedItemsByShareReceiver} from "../services/shared-service";
@@ -28,6 +28,7 @@ function ProfileScreen() {
     const [friends, setFriends] = useState([]);
     const [followStatus, setFollowStatus] = useState(false);
     const [sharedItems, setSharedItems] = useState([]);
+    const [likedGenres, setLikedGenres] = useState([]);
     const [favoriteGenres, setFavoriteGenres] = useState([]);
     const [showModalGenre, setModalGenre] = useState(false);
     const [checkboxes, setCheckboxes] = useState({
@@ -106,24 +107,41 @@ function ProfileScreen() {
             likes.map(async (like) => {
                 let name;
                 let image;
+                let genre;
                 if (like.type === "album") {
                     name = await findAlbumNameId(like.musicThingId)
                     image = await findAlbumImageId(like.musicThingId);
                 } else if (like.type === "artist") {
                     name = await findArtistNameId(like.musicThingId)
                     image = await findArtistImageId(like.musicThingId);
+                    genre = await findArtistGenreId(like.musicThingId);
                 } else if (like.type === "track") {
                     name = await findTrackNameId(like.musicThingId)
                     image = await findTrackImageId(like.musicThingId);
+                    genre = await findTrackGenreId(like.musicThingId);
                 }
                 return {
                     ...like,
                     name,
                     image,
+                    genre,
                 };
             })
         );
         setLikes(likesData);
+
+        const genresSet = new Set();
+
+        likesData.forEach((like) => {
+            if (like.genre) {
+                like.genre.forEach((genre) => {
+                    genresSet.add(genre);
+                });
+            }
+        });
+
+        const uniqueGenres = Array.from(genresSet);
+        setLikedGenres(uniqueGenres);
     };
     const fetchProfile = async () => {
         if (userId) {
@@ -287,6 +305,7 @@ function ProfileScreen() {
         }
     }, [profile]);
 
+    console.log(likedGenres)
     return (
         <div className="container mt-2">
 
@@ -575,7 +594,27 @@ function ProfileScreen() {
                             </div>
                         )}
                         {profile.role === "USER" ? (
-                        <div className="col-3">
+                            <div className="col-3">
+                                <div className="">
+                                    <div className="card border-primary">
+                                        <div className="card-header">Liked Genres</div>
+                                        {likedGenres && (
+                                            <ul className="list-group list-group-flush overflow-auto shadow" style={{maxHeight: "235px"}}>
+                                                {likedGenres.map((genre) => (
+                                                    <div>
+                                                        <li className="list-group-item">
+                                                            {genre}
+                                                        </li>
+                                                    </div>
+                                                ))}
+                                            </ul>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        ) : null }
+                        {profile.role === "USER" ? (
+                            <div className="col-3">
                             <div className="">
                                 <div className="card border-primary">
                                     <div className="card-header">Following</div>
@@ -1161,6 +1200,7 @@ function ProfileScreen() {
                             )}
                             </div>
                         ) : null }
+                        {profile.role === "BUSINESS" ? (
                         <div className="col-3">
                             <div className="">
                                 <div className="card border-primary">
@@ -1181,6 +1221,7 @@ function ProfileScreen() {
                                 </div>
                             </div>
                         </div>
+                        ) : null }
                     </div>
                     {profile.role === "USER" ? (
                     <div className="row mt-2">
