@@ -86,14 +86,6 @@ export default function NavBar() {
                                 </Link>
                             </div>
                         </li>
-                        <li className="nav-item">
-                            <div className="nav-link">
-                                <Link to="/tuits"  className={`nav-link ${active === 'tuits'?'active':''}`}>
-                                    <i className="bi bi-person"></i>
-                                    <span className=""> Tuits</span>
-                                </Link>
-                            </div>
-                        </li>
                     </ul>
                 </div>
             </div>

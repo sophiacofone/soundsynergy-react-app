@@ -12,7 +12,6 @@ import SpotifyScreen from "./spotify";
 import SpotifyAlbumDetailsScreen from "./spotify/spotify-album-details";
 import SpotifyTrackDetailsScreen from "./spotify/spotify-track-details";
 import SpotifyArtistDetailsScreen from "./spotify/spotify-artist-details";
-import TuitList from "./tuiter/tuit-list";
 import SpotifySearchScreen from "./spotify/spotify-search";
 import HomeScreen from "./screens/home-screen";
 import AnalysisScreen from "./screens/analysis-screen";
@@ -49,7 +48,6 @@ function App() {
               <Route path="/" element={<HomeScreen />} />
               <Route path="/analysis" element={<AnalysisScreen />} />
               <Route path="/home" element={<HomeScreen />} />
-              <Route path="/tuits" element={<TuitList />} />
             </Routes>
           </BrowserRouter>
       </CurrentUserContext>
