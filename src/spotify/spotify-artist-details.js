@@ -2,7 +2,7 @@ import {Link, useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import {getArtist, getArtistAlbums, getArtistTopTracks} from "./spotify-service";
 import {useSelector} from "react-redux";
-import {findLikesByUserId, userLikesArtist, userUnlikesArtist} from "./likes-service";
+import {findLikesByUserId, userLikesArtist, userUnlikesArtist, findGenresByUserId} from "./likes-service";
 import ShareButton from "../components/share-button";
 import { userSharesItem } from '../services/shared-service';
 import { findFriendsByUser} from "../services/friends-service";
@@ -35,34 +35,60 @@ function SpotifyArtistDetailsScreen() {
                 return;
             }
 
-            const validFriends = friends.filter(friend => friend.user1 === currentUser._id || friend.user2 === currentUser._id);
-            const randomFriendIndex = Math.floor(Math.random() * validFriends.length);
-            const randomFriend = validFriends[randomFriendIndex];
-            const friendId = randomFriend.user1 === currentUser._id ? randomFriend.user2 : randomFriend.user1;
+            const validFriends = friends.filter(
+                (friend) => friend.user1 === currentUser._id || friend.user2 === currentUser._id
+            );
 
+            const currentUserGenres = await findGenresByUserId(currentUser._id);
+
+            let friendToShareWith = null;
+
+            // New variables to store friend counts
+            let totalFriendCount = validFriends.length;
+            let commonGenreFriendCount = 0;
+
+            for (const friend of validFriends) {
+                const friendId = friend.user1 === currentUser._id ? friend.user2 : friend.user1;
+                const friendGenres = await findGenresByUserId(friendId);
+
+                const commonGenres = currentUserGenres.filter((genre) => friendGenres.includes(genre));
+
+                if (commonGenres.length > 0) {
+                    friendToShareWith = friend;
+                    commonGenreFriendCount++; // Increment count for friends with common genres
+                    break;
+                }
+            }
+
+            if (!friendToShareWith) {
+                const randomFriendIndex = Math.floor(Math.random() * validFriends.length);
+                friendToShareWith = validFriends[randomFriendIndex];
+            }
+
+            const friendId = friendToShareWith.user1 === currentUser._id ? friendToShareWith.user2 : friendToShareWith.user1;
             const randomFriendData = await findUserById(friendId);
             const randomFriendName = randomFriendData.username;
 
             const shareConfirmation = window.confirm(
-                `${randomFriendName} would love this content! Share it with them?`
+                `You have ${totalFriendCount} friends, and of those friends ${commonGenreFriendCount} would like this content. 
+                ${randomFriendName} would like it the most, Share it with them?`
             );
 
             if (shareConfirmation) {
-                userSharesItem(
+                await userSharesItem(
                     currentUser._id,
                     friendId,
                     contentItem.type,
                     contentItem.musicThingId,
                     contentItem.name
-                )
-                    .then(() => {
-                        alert('Content shared successfully.');
-                    })
-                    .catch((error) => {
-                        console.error('Error sharing content:', error);
-                        alert('An error occurred while sharing content.');
-                    });
+                );
+                alert('Content shared successfully.');
             }
+
+            return {
+                totalFriendCount,
+                commonGenreFriendCount,
+            };
         } catch (error) {
             console.error('Error fetching friends:', error);
             alert('An error occurred while fetching friends.');

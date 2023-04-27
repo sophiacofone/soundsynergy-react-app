@@ -1,6 +1,5 @@
 import axios from "axios";
 
-const LIKES_API = "http://localhost:4000/api/likes";
 const USERS_API = "http://localhost:4000/api/users";
 const ALBUMS_API = "http://localhost:4000/api/albums";
 const ARTIST_API = "http://localhost:4000/api/artists";
@@ -10,6 +9,11 @@ export const findLikesByUserId = async (userId) => {
     const response = await axios.get(`${USERS_API}/${userId}/likes`);
     return response.data;
 };
+
+export const findGenresByUserId = async (userId) => {
+    const response = await axios.get(`${USERS_API}/${userId}/liked-genres`);
+    return response.data;
+}
 
 export const findAlbumNameId = async (albumId) => {
     const response = await axios.get(`${ALBUMS_API}/${albumId}/name`);
@@ -61,10 +65,8 @@ export const userLikesAlbum = async (userId, albumId, name, image, genre) => {
         await axios.post(`${ALBUMS_API}`, { spotifyAlbumId: albumId , name: name, image: image, genre: genre});
     }
 
-    // Add like to likes collection
-    const response = await axios.post(
-        `${USERS_API}/${userId}/likes/album/${albumId}`
-    );
+    // Add like to likes collection with genre in the request body
+    const response = await axios.post(`${USERS_API}/${userId}/likes/album/${albumId}`, { genre: genre });
     return response.data;
 };
 
@@ -83,10 +85,8 @@ export const userLikesArtist = async (userId, artistId, name, image, genre) => {
     if (!artist) {
         await axios.post(`${ARTIST_API}`, { spotifyArtistId: artistId, name: name, image: image, genre: genre});
     }
-    // Add like to likes collection
-    const response = await axios.post(
-        `${USERS_API}/${userId}/likes/artist/${artistId}`
-    );
+    // Add like to likes collection with genre in the request body
+    const response = await axios.post(`${USERS_API}/${userId}/likes/artist/${artistId}`, { genre: genre });
     return response.data;
 };
 
@@ -105,10 +105,8 @@ export const userLikesTrack = async (userId, trackId, name, image, genre) => {
     if (!track) {
         await axios.post(`${TRACKS_API}`, { spotifyTrackId: trackId, name: name, image:image, genre: genre});
     }
-    // Add like to likes collection
-    const response = await axios.post(
-        `${USERS_API}/${userId}/likes/track/${trackId}`
-    );
+    // Add like to likes collection with genre in the request body
+    const response = await axios.post(`${USERS_API}/${userId}/likes/track/${trackId}`, { genre: genre });
     return response.data;
 };
 
