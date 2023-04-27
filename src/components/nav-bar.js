@@ -52,7 +52,8 @@ export default function NavBar() {
                                     </div>
                                 </div>
                             </li>
-                            {currentUser && (<li className="nav-item">
+                            {currentUser && currentUser.role === "BUSINESS" ? (
+                                <li className="nav-item">
                                 <div className="nav-link">
                                     <Link to="/analysis"
                                           className={`nav-link ${active === 'analysis' ? 'active' : ''}`}>
@@ -60,7 +61,19 @@ export default function NavBar() {
                                         <span className=""> Analysis</span>
                                     </Link>
                                 </div>
-                            </li>)}
+                            </li>)
+                            : null}
+                            {currentUser && currentUser.role === "USER" ? (
+                                    <li className="nav-item">
+                                        <div className="nav-link">
+                                            <Link to="/analysis"
+                                                  className={`nav-link ${active === 'analysis' ? 'active' : ''}`}>
+                                                <i className="bi bi-bar-chart"></i>
+                                                <span className=""> Analysis</span>
+                                            </Link>
+                                        </div>
+                                    </li>)
+                                : null}
                             {!currentUser && (<li className="nav-item">
                                 <div className="nav-link">
                                     <div className="nav-link">

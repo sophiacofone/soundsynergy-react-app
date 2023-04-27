@@ -267,13 +267,24 @@ function ProfileScreen() {
                                         <div className="col-7">
                                             <h2 className="mb-0">{profile.firstname} {profile.lastname}</h2>
                                             <div className="mb-0">@{profile.username}</div>
-                                            <div className="mt-2">{profile.bio}</div>
+                                            {profile.role === "BUSINESS" ? (
+                                                <div className="mb-0">{profile.website}</div>
+                                            ) : null}
+                                            <div className="mt-2 mb-2">{profile.bio}</div>
                                             <div>
                                                 <i className="bi bi-geo-alt-fill" style={{ marginRight: '5px' }}></i>
                                                 <span className="text-muted">
                                                 {profile.city}, {profile.country}
                                                 </span>
                                             </div>
+                                            {profile.role === "BUSINESS" ? (
+                                                <div>
+                                                    <i className="bi bi-geo-alt-fill" style={{ marginRight: '5px' }}></i>
+                                                    <span className="text-muted">
+                                                     {profile.address}
+                                                 </span>
+                                                </div>
+                                            ) : null}
                                             <div>
                                                 <i className="bi bi-calendar3" style={{ marginRight: '5px' }}></i>
                                                  <span className="text-muted">
@@ -486,6 +497,34 @@ function ProfileScreen() {
                                                     }}
                                                 />
                                             </div>
+                                            {profile.role === "BUSINESS" && (
+                                                <div>
+                                                    <div className="form-group">
+                                                        <label>Website</label>
+                                                        <input
+                                                            type="text"
+                                                            className="form-control"
+                                                            value={profile.website}
+                                                            onChange={(e) => {
+                                                                setProfile({...profile, website: e.target.value});
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    <div className="form-group">
+                                                        <label>Address</label>
+                                                        <input
+                                                            type="text"
+                                                            className="form-control"
+                                                            value={profile.address}
+                                                            onChange={(e) => {
+                                                                setProfile({...profile, address: e.target.value});
+                                                            }}
+                                                        />
+                                                    </div>
+                                                </div>
+                                                )}
+
+
                                             <p className="mt-2"><strong>Private Information</strong></p>
                                             <div className="form-group">
                                                 <label>Password</label>
