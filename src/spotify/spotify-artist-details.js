@@ -153,6 +153,7 @@ function SpotifyArtistDetailsScreen() {
                                         isLiked ? (
                                             <div>
                                                 <button onClick={unlikeArtist} className="btn btn-sm btn-danger">Dislike</button>
+                                                {currentUser.role === "USER" ? (
                                                 <ShareButton
                                                     onClick={() =>
                                                         handleShareClick({
@@ -162,6 +163,7 @@ function SpotifyArtistDetailsScreen() {
                                                         })
                                                     }
                                                 />
+                                                ) : null}
                                             </div>
                                         ) : (
                                             <button onClick={likeArtist} className="btn btn-sm btn-success">Like</button>

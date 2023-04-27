@@ -167,6 +167,7 @@ function SpotifyTrackDetailsScreen() {
                                                     <button onClick={unlikeTrack}
                                                             className="btn btn-sm btn-danger">Dislike
                                                     </button>
+                                                    {currentUser.role === "USER" ? (
                                                     <ShareButton
                                                         onClick={() =>
                                                             handleShareClick({
@@ -176,6 +177,7 @@ function SpotifyTrackDetailsScreen() {
                                                             })
                                                         }
                                                     />
+                                                    ) : null}
                                                 </div>
                                             ) : (
                                                 <button onClick={likeTrack}
