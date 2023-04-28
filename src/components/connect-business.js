@@ -96,7 +96,7 @@ export default function ConnectBusiness() {
             <div>
                 <div className="row mb-2">
                     <div className="col-md-12">
-                        <h5>SoundSynergy Users</h5>
+                        <h5>SoundSynergy Business Users</h5>
                         <p>These are the places we think you'll like visiting the most based on your music data!</p>
                     </div>
                 </div>

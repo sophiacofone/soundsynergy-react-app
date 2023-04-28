@@ -3,8 +3,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router";
 import {Link} from "react-router-dom";
 import SoundSynergyUsers from "../components/soundsynergy-users";
-import AnalysisGenres from "../components/analysis-genres";
 import ConnectBusiness from "../components/connect-business";
+import ConnectShare from "../components/connect-share";
 
 function ConnectScreen() {
     const {currentUser} = useSelector((state) => state.users);
@@ -46,7 +46,7 @@ function ConnectScreen() {
 
                 </div>
                 <div className="tab-pane fade" id="follows" role="tabpanel">
-                    <AnalysisGenres/>
+                    <ConnectShare/>
                 </div>
             </div>
         </div>
