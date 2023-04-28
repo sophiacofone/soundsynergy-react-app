@@ -93,6 +93,9 @@ function SpotifyAlbumDetailsScreen() {
   return (
     <div>
       <div className="container m-3">
+        <button className='btn btn-secondary btn-sm mb-1'>
+          <Link to="/search" style={{ textDecoration: 'none' }}>Back to Search</Link>
+        </button>
         <div className="row">
             <div className="col-md-6 offset-md-4">
               <div className="card">

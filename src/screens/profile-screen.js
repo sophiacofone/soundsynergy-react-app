@@ -254,6 +254,11 @@ function ProfileScreen() {
                 </button>
             </form>
 
+            {currentUser && (
+                <button className='btn btn-secondary btn-sm mb-1'>
+                    <Link to="/profile" style={{ textDecoration: 'none' }}>My Profile Screen</Link>
+                </button>
+            )}
             {profile && (
                 <div>
                     <div className="row">
@@ -341,74 +346,77 @@ function ProfileScreen() {
                                                 </div>
                                             }
                                             <div>
-                                                {userId !== undefined && currentUser.role === "USER" && profile.role === "USER" &&  (
+                                                {currentUser && (
                                                     <>
-                                                        {currentUser !== null && friendStatus === "pending" ? (
-                                                            <button
-                                                                onClick={sendFriendRequest}
-                                                                className="btn btn-sm btn-primary btn-block disabled"
-                                                            >
-                                                                Pending
-                                                            </button>
-                                                        ) : currentUser !== null && friendStatus === null ? (
-                                                            <button
-                                                                onClick={() => alert("Please log in to friend this user.")}
-                                                                className="btn btn-sm btn-primary btn-block"
-                                                            >
-                                                                Add Friend
-                                                            </button>
-                                                        ) : currentUser !== null && friendStatus === "accepted" ? (
-                                                            <button
-                                                                onClick={unfriendUser}
-                                                                className="btn btn-sm btn-danger btn-block"
-                                                            >
-                                                                Unfriend
-                                                            </button>
-                                                        ) : currentUser !== null && friendStatus === "rejected" ? (
-                                                            <button
-                                                                onClick={sendFriendRequest}
-                                                                className="btn btn-sm btn-primary btn-block disabled"
-                                                            >
-                                                                Rejected
-                                                            </button>
-                                                        ) : (
-                                                            <button
-                                                                onClick={sendFriendRequest}
-                                                                className="btn btn-sm btn-primary btn-block"
-                                                            >
-                                                                Add Friend
-                                                            </button>
+                                                        {userId !== undefined && currentUser.role === "USER" && profile.role === "USER" &&  (
+                                                            <>
+                                                                {currentUser !== null && friendStatus === "pending" ? (
+                                                                    <button
+                                                                        onClick={sendFriendRequest}
+                                                                        className="btn btn-sm btn-primary btn-block disabled"
+                                                                    >
+                                                                        Pending
+                                                                    </button>
+                                                                ) : currentUser !== null && friendStatus === null ? (
+                                                                    <button
+                                                                        onClick={() => alert("Please log in to friend this user.")}
+                                                                        className="btn btn-sm btn-primary btn-block"
+                                                                    >
+                                                                        Add Friend
+                                                                    </button>
+                                                                ) : currentUser !== null && friendStatus === "accepted" ? (
+                                                                    <button
+                                                                        onClick={unfriendUser}
+                                                                        className="btn btn-sm btn-danger btn-block"
+                                                                    >
+                                                                        Unfriend
+                                                                    </button>
+                                                                ) : currentUser !== null && friendStatus === "rejected" ? (
+                                                                    <button
+                                                                        onClick={sendFriendRequest}
+                                                                        className="btn btn-sm btn-primary btn-block disabled"
+                                                                    >
+                                                                        Rejected
+                                                                    </button>
+                                                                ) : (
+                                                                    <button
+                                                                        onClick={sendFriendRequest}
+                                                                        className="btn btn-sm btn-primary btn-block"
+                                                                    >
+                                                                        Add Friend
+                                                                    </button>
+                                                                )}
+                                                            </>
+                                                        )}
+                                                        {userId !== undefined && currentUser.role === "USER" &&   (
+                                                            <>
+                                                                {currentUser !== null && followStatus ? (
+                                                                    <button
+                                                                        onClick={unfollowUser}
+                                                                        className="btn btn-sm btn-secondary btn-block"
+                                                                    >
+                                                                        Unfollow
+                                                                    </button>
+                                                                ) : currentUser !== null && friendStatus === null ? (
+                                                                    <button
+                                                                        onClick={() => alert("Please log in to friend this user.")}
+                                                                        className="btn btn-sm btn-primary btn-block"
+                                                                    >
+                                                                        Follow
+                                                                    </button>
+
+                                                                ) : (
+                                                                    <button
+                                                                        onClick={followUser}
+                                                                        className="btn btn-sm btn-secondary btn-block"
+                                                                    >
+                                                                        Follow
+                                                                    </button>
+                                                                )}
+                                                            </>
                                                         )}
                                                     </>
                                                 )}
-                                                {userId !== undefined && currentUser.role === "USER" &&   (
-                                                    <>
-                                                        {currentUser !== null && followStatus ? (
-                                                            <button
-                                                                onClick={unfollowUser}
-                                                                className="btn btn-sm btn-secondary btn-block"
-                                                            >
-                                                                Unfollow
-                                                            </button>
-                                                        ) : currentUser !== null && friendStatus === null ? (
-                                                            <button
-                                                                onClick={() => alert("Please log in to friend this user.")}
-                                                                className="btn btn-sm btn-primary btn-block"
-                                                            >
-                                                                Follow
-                                                            </button>
-
-                                                        ) : (
-                                                            <button
-                                                                onClick={followUser}
-                                                                className="btn btn-sm btn-secondary btn-block"
-                                                            >
-                                                                Follow
-                                                            </button>
-                                                        )}
-                                                    </>
-                                                    )}
-
                                             </div>
                                         </div>
                                     </div>
@@ -745,7 +753,7 @@ function ProfileScreen() {
                                                             <h6 className="card-header">{like.name}</h6>
                                                             <img
                                                                 src={like.image}
-                                                                className="card-img-top"
+                                                                className="card-img-top mx-auto"
                                                                 style={{ width: "12rem", height: "12rem" }}
                                                                 alt={like.name}
                                                             />
@@ -773,7 +781,7 @@ function ProfileScreen() {
                                                             <h6 className="card-header">{like.name}</h6>
                                                             <img
                                                                 src={like.image}
-                                                                className="card-img-top"
+                                                                className="card-img-top mx-auto"
                                                                 style={{ width: "12rem", height: "12rem" }}
                                                                 alt={like.name}
                                                             />
@@ -801,7 +809,7 @@ function ProfileScreen() {
                                                             <h6 className="card-header">{like.name}</h6>
                                                             <img
                                                                 src={like.image}
-                                                                className="card-img-top"
+                                                                className="card-img-top mx-auto"
                                                                 style={{ width: "12rem", height: "12rem" }}
                                                                 alt={like.name}
                                                             />

@@ -29,6 +29,10 @@ body {
     background-color: #EA7B5D !important;
 }
 
+.card.border-primary .card-header {
+    background-color: #EA7B5D !important;
+}
+
 
 /*.blur {
     background-color: rgba(255, 255, 255, 0.5); !* Fallback for older browsers *!

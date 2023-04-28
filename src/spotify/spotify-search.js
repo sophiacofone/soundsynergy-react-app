@@ -36,7 +36,7 @@ function SpotifySearchComponent() {
     return (
         <div className='container m-2'>
             <div>
-                <h1>Spotify Media Search {search !== "" && ` - ${displaySearchType}`}</h1>
+                <h1>Spotify Content Search {search !== "" && ` - ${displaySearchType}`}</h1>
                 <div className="d-flex">
                     <input
                         type="text"
