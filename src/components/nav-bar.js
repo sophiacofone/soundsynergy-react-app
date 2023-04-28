@@ -24,10 +24,13 @@ export default function NavBar() {
                         <ul className="navbar-nav me-auto">
                             <li className="nav-item">
                                 <div className="nav-link">
-                                    <Link to="/" className={`nav-link ${active === 'home' ? 'active' : ''}`}>
-                                        <i className="bi bi-house"></i>
-                                        <span className=""> Home</span>
-                                    </Link>
+                                    <div className="nav-link">
+                                        <Link to="/home"
+                                              className={`nav-link ${active === 'home' ? 'active' : ''}`}>
+                                            <i className="bi bi-house"></i>
+                                            <span className=""> Home</span>
+                                        </Link>
+                                    </div>
                                 </div>
                             </li>
                             <li className="nav-item">
@@ -53,26 +56,30 @@ export default function NavBar() {
                                 </div>
                             </li>
                             {currentUser && currentUser.role === "BUSINESS" ? (
-                                <li className="nav-item">
+                            <li className="nav-item">
                                 <div className="nav-link">
-                                    <Link to="/analysis"
-                                          className={`nav-link ${active === 'analysis' ? 'active' : ''}`}>
-                                        <i className="bi bi-bar-chart"></i>
-                                        <span className=""> Analysis</span>
-                                    </Link>
+                                    <div className="nav-link">
+                                        <Link to="/analysis"
+                                              className={`nav-link ${active === 'analysis' ? 'active' : ''}`}>
+                                            <i className="bi bi-bar-chart"></i>
+                                            <span className=""> Analysis</span>
+                                        </Link>
+                                    </div>
                                 </div>
                             </li>)
-                            : null}
+                                : null}
                             {currentUser && currentUser.role === "USER" ? (
-                                    <li className="nav-item">
-                                        <div className="nav-link">
-                                            <Link to="/connect"
-                                                  className={`nav-link ${active === 'connect' ? 'active' : ''}`}>
-                                                <i className="bi bi-bar-chart"></i>
-                                                <span className=""> Connect</span>
-                                            </Link>
-                                        </div>
-                                    </li>)
+                            <li className="nav-item">
+                                <div className="nav-link">
+                                    <div className="nav-link">
+                                        <Link to="/connect"
+                                              className={`nav-link ${active === 'connect' ? 'active' : ''}`}>
+                                            <i className="bi bi-bar-chart"></i>
+                                            <span className=""> Connect</span>
+                                        </Link>
+                                    </div>
+                                </div>
+                            </li>)
                                 : null}
                             {!currentUser && (<li className="nav-item">
                                 <div className="nav-link">

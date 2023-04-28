@@ -139,7 +139,7 @@ function HomeScreen() {
                                             <div className="col-10 d-flex justify-content-center align-items-center">
                                                 <p className="card-text">You liked <strong>{randomElement.name}</strong>!</p>
                                             </div>
-                                            <div className="col-2">
+                                            <div className="col-2 d-none d-lg-block">
                                                 <img
                                                     src={randomElement.image}
                                                     className="img-thumbnail"
