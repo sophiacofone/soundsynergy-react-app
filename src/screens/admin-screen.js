@@ -13,25 +13,25 @@ function AdminScreen() {
                     <a className="nav-link active" data-bs-toggle="tab" href="#users" aria-selected="true"
                        role="tab">Users</a>
                 </li>
-                <li className="nav-item" role="presentation">
+                {/*<li className="nav-item" role="presentation">
                     <a className="nav-link" data-bs-toggle="tab" href="#friends" aria-selected="false" role="tab"
                        tabIndex="-1">Friends</a>
                 </li>
                 <li className="nav-item" role="presentation">
                     <a className="nav-link" data-bs-toggle="tab" href="#follows" aria-selected="false" role="tab"
                        tabIndex="-1">Follows</a>
-                </li>
+                </li>*/}
             </ul>
             <div id="myTabContent" className="tab-content">
                 <div className="tab-pane fade active show" id="users" role="tabpanel">
                     <AdminUsers/>
                 </div>
-                <div className="tab-pane fade" id="friends" role="tabpanel">
+                {/*<div className="tab-pane fade" id="friends" role="tabpanel">
                     <AdminFriends/>
                 </div>
                 <div className="tab-pane fade" id="follows" role="tabpanel">
                     <AdminFollows/>
-                </div>
+                </div>*/}
             </div>
         </div>
     );

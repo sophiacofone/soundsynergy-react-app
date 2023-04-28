@@ -104,16 +104,19 @@ export default function NavBar() {
                                 </div>
                             </li>
                             )}
-                            <li className="nav-item">
-                                {currentUser && currentUser.role === "ADMIN" ? (
+                            {currentUser && currentUser.role === "ADMIN" ? (
+                                <li className="nav-item">
                                     <div className="nav-link">
-                                        <Link to="/admin" className={`nav-link ${active === 'admin' ? 'active' : ''}`}>
-                                            <i className="bi bi-person"></i>
-                                            <span className=""> Admin</span>
-                                        </Link>
+                                        <div className="nav-link">
+                                            <Link to="/admin"
+                                                  className={`nav-link ${active === 'admin' ? 'active' : ''}`}>
+                                                <i className="bi bi-person"></i>
+                                                <span className=""> Admin</span>
+                                            </Link>
+                                        </div>
                                     </div>
-                                ) : null}
-                            </li>
+                                </li>
+                            ) : null}
                         </ul>
                     </div>
                 </div>
