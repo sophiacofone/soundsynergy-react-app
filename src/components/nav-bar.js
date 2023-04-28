@@ -66,10 +66,10 @@ export default function NavBar() {
                             {currentUser && currentUser.role === "USER" ? (
                                     <li className="nav-item">
                                         <div className="nav-link">
-                                            <Link to="/analysis"
-                                                  className={`nav-link ${active === 'analysis' ? 'active' : ''}`}>
+                                            <Link to="/connect"
+                                                  className={`nav-link ${active === 'connect' ? 'active' : ''}`}>
                                                 <i className="bi bi-bar-chart"></i>
-                                                <span className=""> Analysis</span>
+                                                <span className=""> Connect</span>
                                             </Link>
                                         </div>
                                     </li>)

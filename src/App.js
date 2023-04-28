@@ -15,6 +15,7 @@ import SpotifyArtistDetailsScreen from "./spotify/spotify-artist-details";
 import SpotifySearchScreen from "./spotify/spotify-search";
 import HomeScreen from "./screens/home-screen";
 import AnalysisScreen from "./screens/analysis-screen";
+import ConnectScreen from "./screens/connect-screen";
 function App() {
   return (
     <Provider store={store}>
@@ -48,6 +49,7 @@ function App() {
               <Route path="/" element={<HomeScreen />} />
               <Route path="/analysis" element={<AnalysisScreen />} />
               <Route path="/home" element={<HomeScreen />} />
+              <Route path="/connect" element={<ConnectScreen />} />
             </Routes>
           </BrowserRouter>
       </CurrentUserContext>
