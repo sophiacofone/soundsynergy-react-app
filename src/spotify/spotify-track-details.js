@@ -64,10 +64,17 @@ function SpotifyTrackDetailsScreen() {
             const randomFriendData = await findUserById(friendId);
             const randomFriendName = randomFriendData.username;
 
-            const shareConfirmation = window.confirm(
-                `You have ${totalFriendCount} friends, and of those friends ${commonGenreFriendCount} would like this content. 
-                ${randomFriendName} would like it the most, Share it with them?`
-            );
+            let shareConfirmation;
+
+            if (commonGenreFriendCount === 0) {
+                shareConfirmation = window.confirm(
+                    `You have ${totalFriendCount} friends, and of those friends ${commonGenreFriendCount} would definitely like this content. ${randomFriendName} might like it, share it with them?`
+                );
+            } else {
+                shareConfirmation = window.confirm(
+                    `You have ${totalFriendCount} friends, and of those friends ${commonGenreFriendCount} would definitely like this content. ${randomFriendName} would like it the most, Share it with them?`
+                );
+            }
 
             if (shareConfirmation) {
                 await userSharesItem(
