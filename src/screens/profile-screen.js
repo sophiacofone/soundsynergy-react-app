@@ -667,7 +667,7 @@ function ProfileScreen() {
                                                                     <div className="col-10 d-flex justify-content-center align-items-center">
                                                                         <p className="card-text"><strong>{sharedItem.nameShared.username}</strong> thinks you would love <strong>{sharedItem.name}</strong>!</p>
                                                                     </div>
-                                                                    <div className="col-2">
+                                                                    <div className="col-2 d-none d-lg-block">
                                                                         <img
                                                                             src={sharedItem.imageShared}
                                                                             className="img-thumbnail"
