@@ -1,4 +1,4 @@
-import {Link, useParams} from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import {getArtist, getArtistAlbums, getArtistTopTracks} from "./spotify-service";
 import {useSelector} from "react-redux";
@@ -8,11 +8,16 @@ import { userSharesItem } from '../services/shared-service';
 import { findFriendsByUser} from "../services/friends-service";
 import { findUserById } from "../services/users/users-service";
 
-
 function SpotifyArtistDetailsScreen() {
     const { currentUser } = useSelector((state) => state.users);
 
     const { id } = useParams();
+
+    const navigate = useNavigate();
+
+    const handleBackClick = () => {
+        navigate(-1);
+    };
 
     const [artist, setArtist] = useState({});
     const [artistAlbum, setArtistAlbum] = useState({});
@@ -126,8 +131,8 @@ function SpotifyArtistDetailsScreen() {
     return (
         <div>
             <div className="container m-3">
-                <button className='btn btn-secondary btn-sm mb-1'>
-                    <Link to="/search" style={{ textDecoration: 'none' }}>Back to Search</Link>
+                <button className="btn btn-secondary" onClick={handleBackClick}>
+                    Back
                 </button>
                 <div className="row">
                     <div className="col-md-6 offset-md-4">

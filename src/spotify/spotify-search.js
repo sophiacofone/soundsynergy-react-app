@@ -1,21 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { searchTracks, searchArtists, searchAlbums } from "./spotify-service";
 import { Link, useParams, useNavigate } from "react-router-dom";
 
 function SpotifySearchComponent() {
-    const { searchTerm } = useParams();
+    const { searchTerm, searchTypeParam } = useParams();
+
+    const navigate = useNavigate();
 
     const [search, setSearch] = useState(searchTerm ?? "");
     const [isSearchClicked, setIsSearchClicked] = useState(false);
-    const [searchType, setSearchType] = useState("track");
+    const [searchType, setSearchType] = useState(searchTypeParam ?? "track");
     const [displaySearchType, setDisplaySearchType] = useState("track");
     const [displayResults, setDisplayResults] = useState([]);
+
+    useEffect(() => {
+        if (searchTypeParam) {
+            setSearchType(searchTypeParam);
+        }
+    }, [searchTypeParam]);
 
     const handleSearchTypeChange = (event) => {
         setSearchType(event.target.value);
     };
 
     const handleSearch = async () => {
+        navigate(`/search/results/${searchType}/${search}`);
         let response;
         switch (searchType) {
             case "artist":
@@ -33,6 +42,15 @@ function SpotifySearchComponent() {
         setIsSearchClicked(true);
 
     };
+
+    useEffect(() => {
+        if (searchTerm) {
+            handleSearch();
+        }
+    }, [searchTerm]);
+
+    console.log(displayResults)
+
     return (
         <div className='container m-2'>
             <div>

@@ -37,7 +37,7 @@ function App() {
               />
               <Route path="/search/search" element={<SpotifySearchScreen />} />
               <Route
-                path="/search/search/:searchTerm"
+                path="/search/results/:searchType/:searchTerm"
                 element={<SpotifySearchScreen />}
               />
               <Route path="/search" element={<SpotifyScreen />} />

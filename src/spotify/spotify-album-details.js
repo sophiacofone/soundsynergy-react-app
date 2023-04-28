@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -13,6 +13,12 @@ function SpotifyAlbumDetailsScreen() {
   const { currentUser } = useSelector((state) => state.users);
 
   const { id } = useParams();
+
+  const navigate = useNavigate();
+
+  const handleBackClick = () => {
+    navigate(-1);
+  };
 
   const [tracks, setTracks] = useState([]);
   const [album, setAlbum] = useState({});
@@ -93,8 +99,8 @@ function SpotifyAlbumDetailsScreen() {
   return (
     <div>
       <div className="container m-3">
-        <button className='btn btn-secondary btn-sm mb-1'>
-          <Link to="/search" style={{ textDecoration: 'none' }}>Back to Search</Link>
+        <button className="btn btn-secondary" onClick={handleBackClick}>
+          Back
         </button>
         <div className="row">
             <div className="col-md-6 offset-md-4">
